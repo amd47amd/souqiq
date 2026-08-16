@@ -1,6 +1,7 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
-export async function getActiveGovernorates() {
+async function fetchActiveGovernorates() {
   return prisma.governorate.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -11,6 +12,12 @@ export async function getActiveGovernorates() {
     },
   });
 }
+
+export const getActiveGovernorates = unstable_cache(
+  fetchActiveGovernorates,
+  ["shop-governorates"],
+  { revalidate: 300, tags: ["governorates"] },
+);
 
 /** SQ-YYYYMMDD-XXXX */
 export function generateOrderNumber() {

@@ -1,7 +1,11 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 
 export const PRODUCTS_PER_PAGE = 12;
+
+/** Catalog cache TTL — cuts Singapore DB round-trips on Vercel */
+const CATALOG_REVALIDATE_SECONDS = 120;
 
 export type ProductSort = "newest" | "price-asc" | "price-desc" | "name";
 
@@ -48,7 +52,7 @@ function buildOrderBy(
   }
 }
 
-export async function getCategories() {
+async function fetchCategories() {
   return prisma.category.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -60,13 +64,24 @@ export async function getCategories() {
   });
 }
 
+export const getCategories = unstable_cache(
+  fetchCategories,
+  ["shop-categories"],
+  { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["categories"] },
+);
+
 export async function getCategoryBySlug(slug: string) {
-  return prisma.category.findFirst({
-    where: { slug, isActive: true },
-  });
+  return unstable_cache(
+    async () =>
+      prisma.category.findFirst({
+        where: { slug, isActive: true },
+      }),
+    ["shop-category", slug],
+    { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["categories"] },
+  )();
 }
 
-export async function getProducts(params: ProductListParams = {}) {
+async function fetchProducts(params: ProductListParams) {
   const page = Math.max(1, params.page ?? 1);
   const sort = params.sort ?? "newest";
   const skip = (page - 1) * PRODUCTS_PER_PAGE;
@@ -108,51 +123,83 @@ export async function getProducts(params: ProductListParams = {}) {
   };
 }
 
+export async function getProducts(params: ProductListParams = {}) {
+  const cacheKey = [
+    "shop-products",
+    params.category ?? "",
+    params.q ?? "",
+    params.sort ?? "newest",
+    String(params.page ?? 1),
+    params.featured ? "1" : "0",
+    params.trending ? "1" : "0",
+  ];
+
+  return unstable_cache(() => fetchProducts(params), cacheKey, {
+    revalidate: CATALOG_REVALIDATE_SECONDS,
+    tags: ["products"],
+  })();
+}
+
 export async function getFeaturedProducts(limit = 8) {
-  return prisma.product.findMany({
-    where: { isActive: true, isFeatured: true },
-    include: productCardInclude,
-    orderBy: { updatedAt: "desc" },
-    take: limit,
-  });
+  return unstable_cache(
+    async () =>
+      prisma.product.findMany({
+        where: { isActive: true, isFeatured: true },
+        include: productCardInclude,
+        orderBy: { updatedAt: "desc" },
+        take: limit,
+      }),
+    ["shop-featured", String(limit)],
+    { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["products"] },
+  )();
 }
 
 export async function getTrendingProducts(limit = 8) {
-  return prisma.product.findMany({
-    where: { isActive: true, isTrending: true },
-    include: productCardInclude,
-    orderBy: { updatedAt: "desc" },
-    take: limit,
-  });
+  return unstable_cache(
+    async () =>
+      prisma.product.findMany({
+        where: { isActive: true, isTrending: true },
+        include: productCardInclude,
+        orderBy: { updatedAt: "desc" },
+        take: limit,
+      }),
+    ["shop-trending", String(limit)],
+    { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["products"] },
+  )();
 }
 
 export async function getProductBySlug(slug: string) {
-  return prisma.product.findFirst({
-    where: { slug, isActive: true },
-    include: {
-      category: true,
-      images: { orderBy: { sortOrder: "asc" } },
-      options: {
-        orderBy: { sortOrder: "asc" },
+  return unstable_cache(
+    async () =>
+      prisma.product.findFirst({
+        where: { slug, isActive: true },
         include: {
-          values: { orderBy: { sortOrder: "asc" } },
-        },
-      },
-      variants: {
-        where: { isActive: true },
-        include: {
-          optionValues: {
+          category: true,
+          images: { orderBy: { sortOrder: "asc" } },
+          options: {
+            orderBy: { sortOrder: "asc" },
             include: {
-              optionValue: {
-                include: { option: true },
-              },
+              values: { orderBy: { sortOrder: "asc" } },
             },
           },
+          variants: {
+            where: { isActive: true },
+            include: {
+              optionValues: {
+                include: {
+                  optionValue: {
+                    include: { option: true },
+                  },
+                },
+              },
+            },
+            orderBy: [{ isDefault: "desc" }, { price: "asc" }],
+          },
         },
-        orderBy: [{ isDefault: "desc" }, { price: "asc" }],
-      },
-    },
-  });
+      }),
+    ["shop-product", slug],
+    { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["products"] },
+  )();
 }
 
 export type ProductDetail = NonNullable<

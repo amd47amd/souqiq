@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import type { OrderStatus, Role } from "@/types";
@@ -49,6 +49,8 @@ export async function toggleProductActiveAction(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath("/");
+  revalidateTag("products");
 }
 
 export async function deleteProductAction(formData: FormData) {
@@ -64,6 +66,8 @@ export async function deleteProductAction(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath("/");
+  revalidateTag("products");
 }
 
 export async function upsertCategoryAction(formData: FormData) {
@@ -95,6 +99,9 @@ export async function upsertCategoryAction(formData: FormData) {
 
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
+  revalidatePath("/");
+  revalidateTag("categories");
+  revalidateTag("products");
 }
 
 export async function updateUserAction(formData: FormData) {
@@ -128,6 +135,7 @@ export async function updateGovernorateFeeAction(formData: FormData) {
 
   revalidatePath("/admin/shipping");
   revalidatePath("/checkout");
+  revalidateTag("governorates");
 }
 
 export async function upsertProductAction(formData: FormData) {
@@ -247,5 +255,8 @@ export async function upsertProductAction(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath("/");
+  revalidateTag("products");
+  revalidateTag("categories");
   return { ok: true as const };
 }
