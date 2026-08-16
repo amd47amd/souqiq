@@ -1,0 +1,161 @@
+import Link from "next/link";
+import Image from "next/image";
+import { cn, formatIQD } from "@/lib/utils";
+import {
+  getDisplayPrice,
+  type ProductCardData,
+} from "@/lib/products";
+
+export function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: ProductCardData;
+  priority?: boolean;
+}) {
+  const primary = product.images[0];
+  const secondary = product.images[1];
+  const { price, compareAtPrice } = getDisplayPrice(product);
+  const onSale = !!compareAtPrice && compareAtPrice > price;
+  const stock = product.variants[0]?.stock ?? 0;
+  const outOfStock = stock <= 0;
+
+  return (
+    <Link
+      href={`/products/${product.slug}`}
+      className="product-card group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+    >
+      <div className="absolute inset-0 bg-[#dfe3ea]">
+        {primary ? (
+          secondary ? (
+            <>
+              <Image
+                src={primary.url}
+                alt={primary.alt ?? product.name}
+                fill
+                priority={priority}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover transition-all duration-700 ease-out group-hover:opacity-0 group-hover:scale-105"
+              />
+              <Image
+                src={secondary.url}
+                alt={secondary.alt ?? product.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100"
+              />
+            </>
+          ) : (
+            <Image
+              src={primary.url}
+              alt={primary.alt ?? product.name}
+              fill
+              priority={priority}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            />
+          )
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+            No image
+          </div>
+        )}
+      </div>
+
+      {/* Soft atmosphere — not a hard box */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,16,32,0.08)_0%,rgba(10,16,32,0.05)_35%,rgba(10,16,32,0.55)_78%,rgba(10,16,32,0.82)_100%)] transition-opacity duration-500 group-hover:opacity-95" />
+      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_20%,rgba(26,86,219,0.18),transparent_55%)]" />
+
+      <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between gap-2">
+        <div className="flex flex-wrap gap-1.5">
+          {onSale && (
+            <span className="rounded-full bg-accent/95 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase backdrop-blur-sm">
+              Sale
+            </span>
+          )}
+          {product.isTrending && !onSale && (
+            <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase backdrop-blur-md">
+              Trending
+            </span>
+          )}
+        </div>
+        {outOfStock && (
+          <span className="rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase backdrop-blur-md">
+            Sold out
+          </span>
+        )}
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5">
+        <p className="text-[10px] font-medium tracking-[0.2em] text-white/65 uppercase sm:text-[11px]">
+          {product.category.name}
+        </p>
+        <h3 className="mt-1.5 line-clamp-2 font-display text-[15px] font-semibold leading-snug tracking-tight text-white sm:text-base">
+          {product.name}
+        </h3>
+
+        <div className="mt-3 flex items-end justify-between gap-3">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            {product.hasVariants && (
+              <span className="text-[10px] font-medium text-white/55">From</span>
+            )}
+            <span className="text-[15px] font-semibold tracking-tight text-white sm:text-base">
+              {formatIQD(price)}
+            </span>
+            {onSale && (
+              <span className="text-xs text-white/45 line-through">
+                {formatIQD(compareAtPrice!)}
+              </span>
+            )}
+          </div>
+
+          <span
+            aria-hidden="true"
+            className={cn(
+              "inline-flex h-8 shrink-0 items-center rounded-full bg-white/15 px-3 text-[11px] font-semibold text-white backdrop-blur-md",
+              "opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0",
+            )}
+          >
+            View
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export function ProductGrid({
+  products,
+  className,
+}: {
+  products: ProductCardData[];
+  className?: string;
+}) {
+  if (products.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-border bg-white/70 px-6 py-16 text-center">
+        <p className="font-display text-lg font-semibold">No products found</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Try another category, search term, or clear your filters.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "product-grid grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4",
+        className,
+      )}
+    >
+      {products.map((product, index) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          priority={index < 4}
+        />
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,250 @@
+// SouqIQ — Prisma Schema (Phase 1)
+// Review before running: npx prisma migrate dev
+//
+// Design notes:
+// - Prices & fees are integers in IQD (no fils/decimals).
+// - Every product has >= 1 ProductVariant. Non-variant products use a single isDefault variant.
+// - Variant products use ProductOption / ProductOptionValue + junction rows on variants.
+// - Auth is phone + password (JWT via Auth.js); no email required for customers.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+enum PaymentMethod {
+  COD
+}
+
+// ─────────────────────────────────────────────
+// Auth / Users
+// ─────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(USER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([role])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
+// Catalog
+// ─────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+
+  @@index([isActive, sortOrder])
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String
+  /// Display / fallback price in IQD. Variant prices are authoritative at cart time.
+  basePrice      Int
+  compareAtPrice Int?
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  isFeatured     Boolean  @default(false)
+  isTrending     Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  /// When true, storefront shows option selectors (Size, Color, etc.).
+  hasVariants    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  images     ProductImage[]
+  options    ProductOption[]
+  variants   ProductVariant[]
+  orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@index([isActive, isFeatured])
+  @@index([isActive, isTrending])
+  @@index([createdAt])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int     @default(0)
+
+  @@index([productId, sortOrder])
+}
+
+/// Option definition on a product, e.g. "Size" or "Color".
+model ProductOption {
+  id        String               @id @default(cuid())
+  productId String
+  product   Product              @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  sortOrder Int                  @default(0)
+  values    ProductOptionValue[]
+
+  @@unique([productId, name])
+  @@index([productId, sortOrder])
+}
+
+/// Concrete option value, e.g. "L" or "Navy".
+model ProductOptionValue {
+  id        String        @id @default(cuid())
+  optionId  String
+  option    ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  value     String
+  sortOrder Int           @default(0)
+
+  variantValues ProductVariantOptionValue[]
+
+  @@unique([optionId, value])
+  @@index([optionId, sortOrder])
+}
+
+/// Sellable SKU. Non-variant products still have exactly one default variant.
+model ProductVariant {
+  id             String  @id @default(cuid())
+  productId      String
+  product        Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku            String  @unique
+  price          Int
+  compareAtPrice Int?
+  stock          Int     @default(0)
+  isDefault      Boolean @default(false)
+  isActive       Boolean @default(true)
+
+  optionValues ProductVariantOptionValue[]
+  orderItems   OrderItem[]
+
+  @@index([productId])
+  @@index([productId, isDefault])
+}
+
+/// Links a variant to its chosen option values (Size=L + Color=Navy).
+model ProductVariantOptionValue {
+  variantId     String
+  optionValueId String
+  variant       ProductVariant     @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  optionValue   ProductOptionValue @relation(fields: [optionValueId], references: [id], onDelete: Cascade)
+
+  @@id([variantId, optionValueId])
+  @@index([optionValueId])
+}
+
+// ─────────────────────────────────────────────
+// Shipping
+// ─────────────────────────────────────────────
+
+model Governorate {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  /// Shipping fee in IQD — editable later from Admin.
+  shippingFee Int
+  isActive    Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  orders Order[]
+
+  @@index([isActive, sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// Orders
+// ─────────────────────────────────────────────
+
+model Order {
+  id            String        @id @default(cuid())
+  orderNumber   String        @unique
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(COD)
+
+  /// Snapshot of checkout contact (auto-filled from user, editable).
+  customerName  String
+  customerPhone String
+  governorateId String
+  governorate   Governorate   @relation(fields: [governorateId], references: [id], onDelete: Restrict)
+  addressLine   String
+  notes         String?
+
+  subtotal    Int
+  shippingFee Int
+  total       Int
+
+  /// Soft flag so admin UI can highlight unseen orders.
+  isSeenByAdmin Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([isSeenByAdmin, createdAt])
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  /// Immutable purchase snapshot
+  productName  String
+  variantLabel String?
+  unitPrice    Int
+  quantity     Int
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
+}
