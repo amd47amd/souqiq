@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/layout/page-transition";
 import { Reveal } from "@/components/motion/reveal";
 import { HomeHero } from "@/components/home/home-hero";
+import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { CategoryShowcase } from "@/components/home/category-showcase";
 import { SectionHeading } from "@/components/home/section-heading";
 import { HomeCodBanner } from "@/components/home/home-cod-banner";
@@ -37,6 +38,10 @@ export default async function HomePage() {
   return (
     <PageTransition>
       <HomeHero imageUrl={heroImage} imageAlt={heroAlt} />
+
+      <Reveal>
+        <HomeHowItWorks />
+      </Reveal>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <Reveal>

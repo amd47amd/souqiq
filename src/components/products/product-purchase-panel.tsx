@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Check,
   Minus,
@@ -26,6 +26,8 @@ export function ProductPurchasePanel({ product }: Props) {
   const addItem = useCartStore((s) => s.addItem);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [showSticky, setShowSticky] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   const defaultVariant =
     product.variants.find((v) => v.isDefault) ?? product.variants[0];
@@ -69,6 +71,23 @@ export function ProductPurchasePanel({ product }: Props) {
   const stock = selectedVariant?.stock ?? 0;
   const inStock = !!selectedVariant && stock > 0;
   const lowStock = inStock && stock <= 5;
+  const canAdd = !!selectedVariant && inStock;
+  const lineTotal = formatIQD(price * quantity);
+
+  useEffect(() => {
+    const el = ctaRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setShowSticky(!entry.isIntersecting);
+      },
+      { rootMargin: "-8px 0px 0px 0px", threshold: 0 },
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   function selectOption(optionName: string, value: string) {
     setSelectedOptions((prev) => ({ ...prev, [optionName]: value }));
@@ -239,11 +258,11 @@ export function ProductPurchasePanel({ product }: Props) {
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div ref={ctaRef} className="space-y-3">
           <Button
             size="lg"
             className="h-12 w-full text-base shadow-md shadow-primary/20"
-            disabled={!selectedVariant || !inStock}
+            disabled={!canAdd}
             onClick={handleAddToCart}
           >
             {added ? (
@@ -254,7 +273,7 @@ export function ProductPurchasePanel({ product }: Props) {
             ) : (
               <>
                 <ShoppingBag className="size-4" />
-                Add to cart · {formatIQD(price * quantity)}
+                Add to cart · {lineTotal}
               </>
             )}
           </Button>
@@ -281,6 +300,41 @@ export function ProductPurchasePanel({ product }: Props) {
           text="Protected order flow"
         />
       </ul>
+
+      {/* Mobile sticky buy bar — only when main CTA is off-screen */}
+      <div
+        className={cn(
+          "fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_-24px_rgba(15,23,42,0.35)] backdrop-blur-md transition-transform duration-300 md:hidden",
+          showSticky ? "translate-y-0" : "translate-y-full pointer-events-none",
+        )}
+      >
+        <div className="mx-auto flex max-w-7xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-foreground">
+              {product.name}
+            </p>
+            <p className="text-sm font-semibold text-primary">{lineTotal}</p>
+          </div>
+          <Button
+            size="lg"
+            className="h-11 shrink-0 px-5 shadow-md shadow-primary/20"
+            disabled={!canAdd}
+            onClick={handleAddToCart}
+          >
+            {added ? (
+              <>
+                <Check className="size-4" />
+                Added
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="size-4" />
+                Add
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
