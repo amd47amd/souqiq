@@ -22,7 +22,7 @@ const productCardInclude = {
   category: { select: { id: true, name: true, slug: true } },
   images: {
     orderBy: { sortOrder: "asc" as const },
-    take: 2,
+    take: 1,
   },
   variants: {
     where: { isActive: true },

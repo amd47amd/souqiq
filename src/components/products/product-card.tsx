@@ -14,7 +14,6 @@ export function ProductCard({
   priority?: boolean;
 }) {
   const primary = product.images[0];
-  const secondary = product.images[1];
   const { price, compareAtPrice } = getDisplayPrice(product);
   const onSale = !!compareAtPrice && compareAtPrice > price;
   const stock = product.variants[0]?.stock ?? 0;
@@ -27,34 +26,15 @@ export function ProductCard({
     >
       <div className="absolute inset-0 bg-[#dfe3ea]">
         {primary ? (
-          secondary ? (
-            <>
-              <Image
-                src={primary.url}
-                alt={primary.alt ?? product.name}
-                fill
-                priority={priority}
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover transition-all duration-700 ease-out group-hover:opacity-0 group-hover:scale-105"
-              />
-              <Image
-                src={secondary.url}
-                alt={secondary.alt ?? product.name}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover opacity-0 scale-110 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-100"
-              />
-            </>
-          ) : (
-            <Image
-              src={primary.url}
-              alt={primary.alt ?? product.name}
-              fill
-              priority={priority}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-            />
-          )
+          <Image
+            src={primary.url}
+            alt={primary.alt ?? product.name}
+            fill
+            priority={priority}
+            quality={65}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
             No image
@@ -62,9 +42,7 @@ export function ProductCard({
         )}
       </div>
 
-      {/* Soft atmosphere — not a hard box */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,16,32,0.08)_0%,rgba(10,16,32,0.05)_35%,rgba(10,16,32,0.55)_78%,rgba(10,16,32,0.82)_100%)] transition-opacity duration-500 group-hover:opacity-95" />
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_20%,rgba(26,86,219,0.18),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,16,32,0.08)_0%,rgba(10,16,32,0.05)_35%,rgba(10,16,32,0.55)_78%,rgba(10,16,32,0.82)_100%)]" />
 
       <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
@@ -153,7 +131,7 @@ export function ProductGrid({
         <ProductCard
           key={product.id}
           product={product}
-          priority={index < 4}
+          priority={index < 2}
         />
       ))}
     </div>

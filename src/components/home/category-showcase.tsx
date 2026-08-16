@@ -36,12 +36,13 @@ export function CategoryShowcase({
                 src={category.imageUrl}
                 alt={category.name}
                 fill
+                quality={65}
                 sizes={
                   featured
                     ? "(max-width: 1024px) 100vw, 50vw"
                     : "(max-width: 1024px) 50vw, 25vw"
                 }
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               />
             ) : null}
 
