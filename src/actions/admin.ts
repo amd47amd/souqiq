@@ -50,7 +50,7 @@ export async function toggleProductActiveAction(formData: FormData) {
   revalidatePath("/admin/products");
   revalidatePath("/products");
   revalidatePath("/");
-  revalidateTag("products");
+  revalidateTag("products", "max");
 }
 
 export async function deleteProductAction(formData: FormData) {
@@ -67,7 +67,7 @@ export async function deleteProductAction(formData: FormData) {
   revalidatePath("/admin/products");
   revalidatePath("/products");
   revalidatePath("/");
-  revalidateTag("products");
+  revalidateTag("products", "max");
 }
 
 export async function upsertCategoryAction(formData: FormData) {
@@ -100,8 +100,8 @@ export async function upsertCategoryAction(formData: FormData) {
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
   revalidatePath("/");
-  revalidateTag("categories");
-  revalidateTag("products");
+  revalidateTag("categories", "max");
+  revalidateTag("products", "max");
 }
 
 export async function updateUserAction(formData: FormData) {
@@ -135,7 +135,7 @@ export async function updateGovernorateFeeAction(formData: FormData) {
 
   revalidatePath("/admin/shipping");
   revalidatePath("/checkout");
-  revalidateTag("governorates");
+  revalidateTag("governorates", "max");
 }
 
 export async function upsertProductAction(formData: FormData) {
@@ -256,7 +256,7 @@ export async function upsertProductAction(formData: FormData) {
   revalidatePath("/admin/products");
   revalidatePath("/products");
   revalidatePath("/");
-  revalidateTag("products");
-  revalidateTag("categories");
+  revalidateTag("products", "max");
+  revalidateTag("categories", "max");
   return { ok: true as const };
 }
