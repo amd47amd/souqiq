@@ -1,0 +1,26 @@
+---
+description: Owner wants the agent to run git/setup — no manual CLI for the user
+alwaysApply: true
+---
+
+# SouqIQ — Agent-owned workflow
+
+The project owner speaks Kurdish (Sorani) and does **not** want to run git/npm/env commands themselves. The agent must do the work.
+
+## When the user asks (any similar phrasing)
+
+| User intent (examples) | Agent action |
+|---|---|
+| Repo link / “بێنە” / clone / setup on new PC | `git clone` (or open existing folder), `npm install`, create `.env` via `npx vercel env pull .env --yes` if linked, else copy from `.env.example` and fill from Vercel/project secrets; set `AUTH_URL=http://localhost:3000` for local; `npm run dev` if they want to run |
+| “پوش” / push / send to GitHub | `git status`, `git diff`, commit if needed (ask only if message unclear), `git push` |
+| “کۆتا ڤێرژن” / pull / sync from GitHub | `git pull`, then `npm install` if lockfile changed |
+| Deploy / Vercel | Prefer GitHub push (auto-deploy). Use `npx vercel --prod` only if needed |
+
+## Rules
+
+- Never tell the user to “run these commands yourself” as the primary path — execute them.
+- Never commit `.env` or secrets.
+- Repo: `https://github.com/amd47amd/souqiq.git`
+- Live site: `https://souqiq.vercel.app`
+- Prefer committing and pushing when the user clearly wants changes on GitHub/Vercel.
+- On a brand-new machine: if GitHub/Vercel CLI auth is missing, guide **one** login step (`gh auth login` / `vercel login`), then continue the rest yourself.
