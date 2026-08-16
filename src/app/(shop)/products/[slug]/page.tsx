@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Package, MapPin, RotateCcw } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
+import { Reveal } from "@/components/motion/reveal";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ProductPurchasePanel } from "@/components/products/product-purchase-panel";
 import { ProductGrid } from "@/components/products/product-card";
@@ -40,76 +41,88 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-        <nav
-          aria-label="Breadcrumb"
-          className="mb-8 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
-        >
-          <Link href="/products" className="transition-colors hover:text-primary">
-            Products
-          </Link>
-          <ChevronRight className="size-3.5 opacity-50" />
-          <Link
-            href={`/products?category=${product.category.slug}`}
-            className="transition-colors hover:text-primary"
+        <Reveal subtle>
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-8 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
           >
-            {product.category.name}
-          </Link>
-          <ChevronRight className="size-3.5 opacity-50" />
-          <span className="line-clamp-1 font-medium text-foreground">
-            {product.name}
-          </span>
-        </nav>
+            <Link href="/products" className="transition-colors hover:text-primary">
+              Products
+            </Link>
+            <ChevronRight className="size-3.5 opacity-50" />
+            <Link
+              href={`/products?category=${product.category.slug}`}
+              className="transition-colors hover:text-primary"
+            >
+              {product.category.name}
+            </Link>
+            <ChevronRight className="size-3.5 opacity-50" />
+            <span className="line-clamp-1 font-medium text-foreground">
+              {product.name}
+            </span>
+          </nav>
+        </Reveal>
 
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
-          <ProductGallery images={product.images} productName={product.name} />
-          <ProductPurchasePanel product={product} />
+          <Reveal>
+            <ProductGallery images={product.images} productName={product.name} />
+          </Reveal>
+          <Reveal delay={90} subtle>
+            <ProductPurchasePanel product={product} />
+          </Reveal>
         </div>
 
-        <section className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5 lg:mt-16">
-          <DetailCard
-            icon={<Package className="size-5" />}
-            title="What’s included"
-            text={
-              product.hasVariants
-                ? "Choose your preferred options before checkout. Exact stock is checked when you place the order."
-                : product.description
-            }
-          />
-          <DetailCard
-            icon={<MapPin className="size-5" />}
-            title="Delivery across Iraq"
-            text="We ship to every governorate with clear COD shipping fees shown at checkout."
-          />
-          <DetailCard
-            icon={<RotateCcw className="size-5" />}
-            title="Order support"
-            text="Need help after ordering? Reach us on WhatsApp and we will assist with your delivery."
-          />
-        </section>
+        <Reveal delay={40}>
+          <section className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5 lg:mt-16">
+            <DetailCard
+              icon={<Package className="size-5" />}
+              title="What’s included"
+              text={
+                product.hasVariants
+                  ? "Choose your preferred options before checkout. Exact stock is checked when you place the order."
+                  : product.description
+              }
+            />
+            <DetailCard
+              icon={<MapPin className="size-5" />}
+              title="Delivery across Iraq"
+              text="We ship to every governorate with clear COD shipping fees shown at checkout."
+            />
+            <DetailCard
+              icon={<RotateCcw className="size-5" />}
+              title="Order support"
+              text="Need help after ordering? Reach us on WhatsApp and we will assist with your delivery."
+            />
+          </section>
+        </Reveal>
 
-        <section className="mt-14 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#143a9e_0%,#1a56db_48%,#8b5e3c_145%)] px-6 py-8 text-white sm:px-8 sm:py-9 lg:mt-16">
-          <p className="text-[11px] font-semibold tracking-[0.22em] text-white/70 uppercase">
-            Why shop this item
-          </p>
-          <h2 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-            Premium selection with cash on delivery — no online payment needed.
-          </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">
-            Add to cart, confirm your governorate, and pay when your package
-            arrives. Simple, local, and built for shopping across Iraq.
-          </p>
-        </section>
+        <Reveal>
+          <section className="mt-14 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#143a9e_0%,#1a56db_48%,#8b5e3c_145%)] px-6 py-8 text-white sm:px-8 sm:py-9 lg:mt-16">
+            <p className="text-[11px] font-semibold tracking-[0.22em] text-white/70 uppercase">
+              Why shop this item
+            </p>
+            <h2 className="mt-2 max-w-2xl font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+              Premium selection with cash on delivery — no online payment needed.
+            </h2>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">
+              Add to cart, confirm your governorate, and pay when your package
+              arrives. Simple, local, and built for shopping across Iraq.
+            </p>
+          </section>
+        </Reveal>
 
         {relatedProducts.length > 0 && (
-          <section className="mt-16 border-t border-border/80 pt-14 lg:mt-20">
-            <SectionHeading
-              title={`More in ${product.category.name}`}
-              description="Continue exploring this collection."
-              href={`/products?category=${product.category.slug}`}
-              linkLabel="View all"
-            />
-            <ProductGrid products={relatedProducts} />
-          </section>
+          <Reveal>
+            <section className="mt-16 border-t border-border/80 pt-14 lg:mt-20">
+              <SectionHeading
+                title={`More in ${product.category.name}`}
+                description="Continue exploring this collection."
+                href={`/products?category=${product.category.slug}`}
+                linkLabel="View all"
+              />
+              <ProductGrid products={relatedProducts} />
+            </section>
+          </Reveal>
         )}
       </div>
     </PageTransition>
@@ -126,14 +139,16 @@ function DetailCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-white p-5 shadow-[0_1px_0_rgba(18,21,26,0.03)] sm:p-6">
+    <div className="rounded-2xl border border-border/80 bg-white/80 p-5 sm:p-6">
       <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
         {icon}
       </div>
-      <h2 className="mt-4 font-display text-lg font-semibold tracking-tight">
+      <h3 className="mt-4 font-display text-base font-semibold tracking-tight">
         {title}
-      </h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+      </h3>
+      <p className="mt-2 line-clamp-5 text-sm leading-relaxed text-muted-foreground">
+        {text}
+      </p>
     </div>
   );
 }

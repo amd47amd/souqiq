@@ -29,17 +29,17 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
       <div className="relative mx-auto flex min-h-[max(640px,min(92dvh,880px))] max-w-7xl flex-col justify-end px-4 pb-20 pt-28 sm:px-6 sm:pb-24 lg:px-8 lg:pb-28">
-        <div className="max-w-2xl">
+        <div className="hero-enter max-w-2xl">
           <p className="text-[11px] font-semibold tracking-[0.28em] text-white/70 uppercase sm:text-xs">
             Marketplace · Iraq
           </p>
           <h1 className="mt-4 font-display text-6xl font-bold tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">
             {APP_NAME}
           </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-white/85 sm:text-lg">
+          <p className="hero-enter-delay mt-5 max-w-md text-base leading-relaxed text-white/85 sm:text-lg">
             Premium goods with cash on delivery to every governorate.
           </p>
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div className="hero-enter-delay mt-9 flex flex-wrap gap-3">
             <Button
               asChild
               size="lg"

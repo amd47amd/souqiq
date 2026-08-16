@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageTransition } from "@/components/layout/page-transition";
+import { Reveal } from "@/components/motion/reveal";
 import { ProductGrid } from "@/components/products/product-card";
-import {
-  ProductPagination,
-} from "@/components/products/product-filters";
+import { ProductPagination } from "@/components/products/product-filters";
 import {
   getCategoryBySlug,
   getProducts,
@@ -48,44 +47,50 @@ export default async function CategoryDetailPage({
   return (
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <nav className="mb-6 text-sm text-muted-foreground">
-          <Link href="/categories" className="hover:text-primary">
-            Categories
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-foreground">{category.name}</span>
-        </nav>
+        <Reveal subtle>
+          <nav className="mb-6 text-sm text-muted-foreground">
+            <Link href="/categories" className="hover:text-primary">
+              Categories
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-foreground">{category.name}</span>
+          </nav>
 
-        <div className="mb-8">
-          <h1 className="font-display text-3xl font-semibold tracking-tight">
-            {category.name}
-          </h1>
-          {category.description && (
-            <p className="mt-3 max-w-2xl text-muted-foreground">
-              {category.description}
+          <div className="mb-8">
+            <h1 className="font-display text-3xl font-semibold tracking-tight">
+              {category.name}
+            </h1>
+            {category.description && (
+              <p className="mt-3 max-w-2xl text-muted-foreground">
+                {category.description}
+              </p>
+            )}
+            <p className="mt-2 text-sm text-muted-foreground">
+              {result.total} products
             </p>
-          )}
-          <p className="mt-2 text-sm text-muted-foreground">
-            {result.total} products
-          </p>
-        </div>
+          </div>
+        </Reveal>
 
-        <ProductGrid products={result.products} />
-        <ProductPagination
-          page={result.page}
-          totalPages={result.totalPages}
-          category={slug}
-          sort={sort}
-        />
+        <Reveal delay={80}>
+          <ProductGrid products={result.products} />
+          <ProductPagination
+            page={result.page}
+            totalPages={result.totalPages}
+            category={slug}
+            sort={sort}
+          />
+        </Reveal>
 
-        <div className="mt-8">
-          <Link
-            href={`/products?category=${slug}`}
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            Open in full catalog view
-          </Link>
-        </div>
+        <Reveal delay={120} subtle>
+          <div className="mt-8">
+            <Link
+              href={`/products?category=${slug}`}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Open in full catalog view
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </PageTransition>
   );
