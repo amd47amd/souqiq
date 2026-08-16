@@ -72,7 +72,7 @@ export default async function HomePage() {
               <SectionHeading
                 title="Trending now"
                 description="What shoppers across Iraq are choosing this week."
-                href="/products?sort=newest"
+                href="/products?trending=1"
                 linkLabel="Explore products"
               />
             </Reveal>

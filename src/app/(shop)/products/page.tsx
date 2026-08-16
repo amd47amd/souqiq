@@ -17,6 +17,7 @@ type SearchParams = Promise<{
   q?: string;
   sort?: string;
   page?: string;
+  trending?: string;
 }>;
 
 const SORTS: ProductSort[] = ["newest", "price-asc", "price-desc", "name"];
@@ -41,10 +42,11 @@ export default async function ProductsPage({
   const q = params.q?.trim() || undefined;
   const sort = parseSort(params.sort);
   const page = Math.max(1, Number(params.page) || 1);
+  const trending = params.trending === "1" || params.trending === "true";
 
   const [categories, result] = await Promise.all([
     getCategories(),
-    getProducts({ category, q, sort, page }),
+    getProducts({ category, q, sort, page, trending: trending || undefined }),
   ]);
 
   return (
@@ -53,17 +55,19 @@ export default async function ProductsPage({
         <Reveal subtle>
           <div className="mb-8">
             <h1 className="font-display text-3xl font-semibold tracking-tight">
-              Products
+              {trending ? "Trending" : "Products"}
             </h1>
             <p className="mt-2 text-muted-foreground">
               {q
                 ? `Results for “${q}”`
-                : "Browse the full SouqIQ catalog across Iraq."}
+                : trending
+                  ? "What shoppers across Iraq are choosing right now."
+                  : "Browse the full SouqIQ catalog across Iraq."}
             </p>
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+        <div className="grid gap-8 lg:grid-cols-[220px_1fr] xl:grid-cols-[240px_1fr]">
           <Reveal delay={40} subtle>
             <ProductFilters
               categories={categories.map((c) => ({
@@ -74,6 +78,7 @@ export default async function ProductsPage({
               currentCategory={category}
               currentSort={sort}
               currentQuery={q}
+              trending={trending}
               total={result.total}
             />
           </Reveal>
@@ -87,6 +92,7 @@ export default async function ProductsPage({
                 category={category}
                 sort={sort}
                 q={q}
+                trending={trending}
               />
             </div>
           </Reveal>

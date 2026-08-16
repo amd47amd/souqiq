@@ -17,7 +17,7 @@ export const FOOTER_LINKS = {
   shop: [
     { href: "/products", label: "All Products" },
     { href: "/categories", label: "Categories" },
-    { href: "/products?sort=trending", label: "Trending" },
+    { href: "/products?trending=1", label: "Trending" },
   ],
   company: [
     { href: "/about", label: "About Us" },
