@@ -1440,6 +1440,9 @@ async function seedProducts(categoryIds: Map<string, string>) {
       await createSimpleProduct(product, categoryId);
     }
     created += 1;
+    if (created % 10 === 0 || created === ALL_PRODUCTS.length) {
+      console.log(`  … products ${created}/${ALL_PRODUCTS.length}`);
+    }
   }
   return created;
 }
