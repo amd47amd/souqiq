@@ -7,13 +7,14 @@
  */
 import "dotenv/config";
 import bcrypt from "bcryptjs";
+import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../src/generated/prisma/client";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-const prisma = new PrismaClient({ adapter });
+// Prefer session/direct URL for seeding (many writes); fall back to DATABASE_URL
+const seedUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL!;
+const pool = new Pool({ connectionString: seedUrl, max: 1 });
+const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 
 const ADMIN = {
   name: "Super Admin",
