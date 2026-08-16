@@ -4,10 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useMemo, useState } from "react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatIQD } from "@/lib/utils";
 import { useCartStore } from "@/store/cart";
 import {
@@ -68,15 +70,13 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
 
   if (items.length === 0 && !state.ok) {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-white px-6 py-16 text-center">
-        <p className="font-display text-lg font-semibold">Your cart is empty</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Add products before checking out.
-        </p>
-        <Button asChild className="mt-6">
-          <Link href="/products">Browse products</Link>
-        </Button>
-      </div>
+      <EmptyState
+        icon={<ShoppingBag className="size-7" strokeWidth={1.75} />}
+        title="Your cart is empty"
+        description="Add products before checking out with cash on delivery."
+        actionHref="/products"
+        actionLabel="Browse products"
+      />
     );
   }
 

@@ -6,6 +6,7 @@ import { ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatIQD } from "@/lib/utils";
 import { useCartStore } from "@/store/cart";
 
@@ -30,20 +31,13 @@ export function CartPageClient() {
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-white px-6 py-16 text-center">
-        <div className="rounded-full bg-muted p-4 text-muted-foreground">
-          <ShoppingBag className="size-7" />
-        </div>
-        <p className="mt-4 font-display text-lg font-semibold">
-          Your cart is empty
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Browse products and add items to continue.
-        </p>
-        <Button asChild className="mt-6">
-          <Link href="/products">Continue shopping</Link>
-        </Button>
-      </div>
+      <EmptyState
+        icon={<ShoppingBag className="size-7" strokeWidth={1.75} />}
+        title="Your cart is empty"
+        description="Browse the catalog, add what you like, and checkout with cash on delivery."
+        actionHref="/products"
+        actionLabel="Continue shopping"
+      />
     );
   }
 

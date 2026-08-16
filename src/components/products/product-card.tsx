@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SearchX } from "lucide-react";
 import { cn, formatIQD } from "@/lib/utils";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   getDisplayPrice,
   type ProductCardData,
@@ -111,12 +113,13 @@ export function ProductGrid({
 }) {
   if (products.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-white/70 px-6 py-16 text-center">
-        <p className="font-display text-lg font-semibold">No products found</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Try another category, search term, or clear your filters.
-        </p>
-      </div>
+      <EmptyState
+        icon={<SearchX className="size-7" strokeWidth={1.75} />}
+        title="No products found"
+        description="Try another category, search term, or clear your filters."
+        actionHref="/products"
+        actionLabel="View all products"
+      />
     );
   }
 

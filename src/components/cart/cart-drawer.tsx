@@ -41,15 +41,20 @@ export function CartDrawer() {
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-              <div className="rounded-full bg-muted p-4 text-muted-foreground">
-                <ShoppingBag className="size-7" />
+            <div className="flex flex-col items-center justify-center gap-4 py-14 text-center">
+              <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <ShoppingBag className="size-6" strokeWidth={1.75} />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Browse products and add items to get started.
-              </p>
-              <Button asChild variant="outline" onClick={closeCart}>
-                <Link href="/products">Continue shopping</Link>
+              <div>
+                <p className="font-display text-base font-semibold">
+                  Your cart is empty
+                </p>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  Browse products and add items to get started.
+                </p>
+              </div>
+              <Button asChild onClick={closeCart}>
+                <Link href="/products">Browse products</Link>
               </Button>
             </div>
           ) : (
