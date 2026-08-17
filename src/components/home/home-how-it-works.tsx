@@ -36,9 +36,15 @@ export function HomeHowItWorks() {
             return (
               <li
                 key={step.title}
-                className="group relative rounded-[1.35rem] border border-border/70 bg-white p-5 shadow-[0_12px_40px_-28px_rgba(18,21,26,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(26,86,219,0.35)] sm:p-6"
+                className="group relative overflow-hidden rounded-[1.35rem] border border-border/70 bg-white p-5 shadow-[0_12px_40px_-28px_rgba(18,21,26,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(26,86,219,0.35)] sm:p-6"
               >
-                <div className="flex items-start gap-4 sm:flex-col sm:items-start sm:gap-5">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute top-3 right-4 font-display text-5xl font-bold tracking-tight text-primary/10"
+                >
+                  0{index + 1}
+                </span>
+                <div className="relative flex items-start gap-4 sm:flex-col sm:items-start sm:gap-5">
                   <div className="relative flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/10 transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
                     <Icon className="size-5" strokeWidth={1.75} />
                     <span className="absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white">

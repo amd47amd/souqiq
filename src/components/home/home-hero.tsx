@@ -46,7 +46,8 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
             {APP_NAME}
           </h1>
           <p className="hero-enter-delay mt-5 max-w-md text-base leading-relaxed text-white/85 sm:text-lg">
-            Premium goods with cash on delivery to every governorate.
+            Clothing, electronics, home, and fragrance — curated for Iraq, paid
+            on delivery.
           </p>
           <div className="hero-enter-delay mt-9 flex flex-wrap gap-3">
             <Button
