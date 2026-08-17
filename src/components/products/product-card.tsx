@@ -38,7 +38,7 @@ export function ProductCard({
             priority={priority}
             quality={65}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">

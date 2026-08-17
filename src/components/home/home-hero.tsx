@@ -24,7 +24,8 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
         />
       ) : null}
 
-      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(12,28,72,0.88)_0%,rgba(18,40,110,0.72)_50%,rgba(12,28,72,0.45)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(12,28,72,0.92)_0%,rgba(18,40,110,0.78)_42%,rgba(139,94,60,0.45)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.14),transparent_42%)]" />
 
       <div className="relative mx-auto flex min-h-[min(78dvh,720px)] max-w-7xl flex-col justify-end px-4 pb-16 pt-24 sm:px-6 sm:pb-20 lg:px-8 lg:pb-24">
         <div className="hero-enter max-w-2xl">

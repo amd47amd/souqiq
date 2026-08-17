@@ -45,7 +45,7 @@ export function CategoryShowcase({
                     ? "(max-width: 1024px) 100vw, 50vw"
                     : "(max-width: 1024px) 50vw, 25vw"
                 }
-                className="object-cover"
+                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               />
             ) : null}
 
@@ -65,7 +65,7 @@ export function CategoryShowcase({
                   {category.productCount} products
                 </p>
               </div>
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-white">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/15 text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-white/25">
                 <ArrowUpRight className="size-4" />
               </span>
             </div>

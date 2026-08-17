@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Package, MapPin, RotateCcw } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ProductPurchasePanel } from "@/components/products/product-purchase-panel";
 import { ProductGrid } from "@/components/products/product-card";
@@ -43,10 +44,11 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
-      <nav
-        aria-label="Breadcrumb"
-        className="mb-8 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
-      >
+      <Reveal subtle>
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-8 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
+        >
         <Link href="/products" className="transition-colors hover:text-primary">
           Products
         </Link>
@@ -62,13 +64,19 @@ export default async function ProductDetailPage({ params }: Props) {
           {product.name}
         </span>
       </nav>
+      </Reveal>
 
       <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
-        <ProductGallery images={product.images} productName={product.name} />
-        <ProductPurchasePanel product={product} />
+        <Reveal>
+          <ProductGallery images={product.images} productName={product.name} />
+        </Reveal>
+        <Reveal delay={90} subtle>
+          <ProductPurchasePanel product={product} />
+        </Reveal>
       </div>
 
-      <section className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5 lg:mt-16">
+      <Reveal delay={40}>
+        <section className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5 lg:mt-16">
         <DetailCard
           icon={<Package className="size-5" />}
           title="What’s included"
@@ -88,9 +96,11 @@ export default async function ProductDetailPage({ params }: Props) {
           title="Order support"
           text="Need help after ordering? Reach us on WhatsApp and we will assist with your delivery."
         />
-      </section>
+        </section>
+      </Reveal>
 
-      <section className="mt-14 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#143a9e_0%,#1a56db_48%,#8b5e3c_145%)] px-6 py-8 text-white sm:px-8 sm:py-9 lg:mt-16">
+      <Reveal>
+        <section className="mt-14 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#143a9e_0%,#1a56db_48%,#8b5e3c_145%)] px-6 py-8 text-white sm:px-8 sm:py-9 lg:mt-16">
         <p className="text-[11px] font-semibold tracking-[0.22em] text-white/70 uppercase">
           Why shop this item
         </p>
@@ -101,7 +111,8 @@ export default async function ProductDetailPage({ params }: Props) {
           Add to cart, confirm your governorate, and pay when your package
           arrives. Simple, local, and built for shopping across Iraq.
         </p>
-      </section>
+        </section>
+      </Reveal>
 
       <Suspense
         fallback={
@@ -145,15 +156,17 @@ async function RelatedProducts({
   if (relatedProducts.length === 0) return null;
 
   return (
-    <section className="mt-16 border-t border-border/80 pt-14 lg:mt-20">
-      <SectionHeading
-        title={`More in ${categoryName}`}
-        description="Continue exploring this collection."
-        href={`/products?category=${categorySlug}`}
-        linkLabel="View all"
-      />
-      <ProductGrid products={relatedProducts} />
-    </section>
+    <Reveal>
+      <section className="mt-16 border-t border-border/80 pt-14 lg:mt-20">
+        <SectionHeading
+          title={`More in ${categoryName}`}
+          description="Continue exploring this collection."
+          href={`/products?category=${categorySlug}`}
+          linkLabel="View all"
+        />
+        <ProductGrid products={relatedProducts} />
+      </section>
+    </Reveal>
   );
 }
 
@@ -167,7 +180,7 @@ function DetailCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border/80 bg-white/80 p-5 sm:p-6">
+    <div className="rounded-2xl border border-border/80 bg-white/80 p-5 sm:p-6 transition-transform duration-300 hover:-translate-y-0.5">
       <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
         {icon}
       </div>

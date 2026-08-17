@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
+import { Reveal } from "@/components/motion/reveal";
 import { ProductGrid } from "@/components/products/product-card";
 import {
   ProductFilters,
@@ -53,44 +54,50 @@ export default async function ProductsPage({
   return (
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="font-display text-3xl font-semibold tracking-tight">
-            {trending ? "Trending" : "Products"}
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            {q
-              ? `Results for “${q}”`
-              : trending
-                ? "What shoppers across Iraq are choosing right now."
-                : "Browse the full SouqIQ catalog across Iraq."}
-          </p>
-        </div>
+        <Reveal subtle>
+          <div className="mb-8">
+            <h1 className="font-display text-3xl font-semibold tracking-tight">
+              {trending ? "Trending" : "Products"}
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              {q
+                ? `Results for “${q}”`
+                : trending
+                  ? "What shoppers across Iraq are choosing right now."
+                  : "Browse the full SouqIQ catalog across Iraq."}
+            </p>
+          </div>
+        </Reveal>
 
         <div className="grid gap-8 lg:grid-cols-[220px_1fr] xl:grid-cols-[240px_1fr]">
-          <ProductFilters
-            categories={categories.map((c) => ({
-              slug: c.slug,
-              name: c.name,
-              count: c._count.products,
-            }))}
-            currentCategory={category}
-            currentSort={sort}
-            currentQuery={q}
-            trending={trending}
-            total={result.total}
-          />
-
-          <div>
-            <ProductGrid products={result.products} />
-            <ProductPagination
-              page={result.page}
-              totalPages={result.totalPages}
-              category={category}
-              sort={sort}
-              q={q}
+          <Reveal delay={40} subtle>
+            <ProductFilters
+              categories={categories.map((c) => ({
+                slug: c.slug,
+                name: c.name,
+                count: c._count.products,
+              }))}
+              currentCategory={category}
+              currentSort={sort}
+              currentQuery={q}
               trending={trending}
+              total={result.total}
             />
-          </div>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <div>
+              <ProductGrid products={result.products} />
+              <ProductPagination
+                page={result.page}
+                totalPages={result.totalPages}
+                category={category}
+                sort={sort}
+                q={q}
+                trending={trending}
+              />
+            </div>
+          </Reveal>
         </div>
       </div>
     </PageTransition>

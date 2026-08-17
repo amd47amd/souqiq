@@ -78,7 +78,7 @@ export function ProductGallery({
       <div className="lg:sticky lg:top-24">
         <div className="flex flex-col gap-3 lg:flex-row-reverse lg:gap-4">
           <div className="relative min-w-0 flex-1">
-            <div className="relative overflow-hidden rounded-[1.25rem] bg-[#eef0f4]">
+            <div className="group relative overflow-hidden rounded-[1.25rem] bg-[#eef0f4]">
               <button
                 type="button"
                 className="relative block aspect-[4/5] w-full cursor-zoom-in sm:aspect-[5/6]"
@@ -93,7 +93,7 @@ export function ProductGallery({
                   priority
                   quality={70}
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                 />
               </button>
 
@@ -167,7 +167,10 @@ export function ProductGallery({
                       alt={image.alt ?? `${productName} ${index + 1}`}
                       fill
                       sizes="72px"
-                      className="object-cover"
+                      className={cn(
+                        "object-cover transition-transform duration-500",
+                        isActive ? "scale-100" : "scale-105 group-hover/thumb:scale-100",
+                      )}
                     />
                     {/* Soft active cue — bottom bar, no blue box */}
                     <span
