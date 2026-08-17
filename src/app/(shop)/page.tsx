@@ -77,7 +77,7 @@ export default async function HomePage() {
               />
             </Reveal>
             <Reveal delay={90}>
-              <ProductGrid products={trending} />
+              <ProductGrid products={trending} priorityCount={2} />
             </Reveal>
           </div>
         </section>

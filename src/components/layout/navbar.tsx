@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { APP_NAME, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -45,10 +44,8 @@ export function Navbar({ user }: { user: NavbarUser }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b transition-all duration-300",
-        scrolled
-          ? "border-border/80 bg-white/90 shadow-sm backdrop-blur-md"
-          : "border-transparent bg-white/70 backdrop-blur-sm",
+        "sticky top-0 z-40 border-b bg-white",
+        scrolled ? "border-border/80" : "border-transparent",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
@@ -56,7 +53,7 @@ export function Navbar({ user }: { user: NavbarUser }) {
           variant="ghost"
           size="icon"
           className="lg:hidden"
-          aria-label="Open menu"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
           onClick={() => setMobileOpen((v) => !v)}
         >
           {mobileOpen ? <X /> : <Menu />}
@@ -153,58 +150,55 @@ export function Navbar({ user }: { user: NavbarUser }) {
         </div>
       </div>
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="overflow-hidden border-t border-border bg-white lg:hidden"
-          >
-            <nav className="flex flex-col gap-1 px-4 py-3">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {user ? (
-                <>
-                  <Link
-                    href="/account"
-                    className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
-                  >
-                    Account ({user.name})
-                  </Link>
-                  <form action={logoutAction}>
-                    <button
-                      type="submit"
-                      className="w-full rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground hover:bg-muted"
-                    >
-                      Sign out
-                    </button>
-                  </form>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
-                >
-                  Sign in
-                </Link>
-              )}
-              <form action="/products" className="relative mt-2">
-                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input name="q" placeholder="Search SouqIQ…" className="pl-9" />
-              </form>
-            </nav>
-          </motion.div>
+      <div
+        className={cn(
+          "grid overflow-hidden border-t border-border bg-white transition-[grid-template-rows] duration-200 ease-out lg:hidden",
+          mobileOpen ? "grid-rows-[1fr] border-border" : "grid-rows-[0fr] border-transparent",
         )}
-      </AnimatePresence>
+      >
+        <nav className="min-h-0 overflow-hidden">
+          <div className="flex flex-col gap-1 px-4 py-3">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user ? (
+              <>
+                <Link
+                  href="/account"
+                  className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
+                >
+                  Account ({user.name})
+                </Link>
+                <form action={logoutAction}>
+                  <button
+                    type="submit"
+                    className="w-full rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground hover:bg-muted"
+                  >
+                    Sign out
+                  </button>
+                </form>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                Sign in
+              </Link>
+            )}
+            <form action="/products" className="relative mt-2">
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input name="q" placeholder="Search SouqIQ…" className="pl-9" />
+            </form>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }

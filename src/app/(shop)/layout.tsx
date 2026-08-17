@@ -1,8 +1,14 @@
+import dynamic from "next/dynamic";
 import { auth } from "@/lib/auth";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { CartDrawer } from "@/components/cart/cart-drawer";
 import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
+
+const CartDrawer = dynamic(() =>
+  import("@/components/cart/cart-drawer").then((mod) => ({
+    default: mod.CartDrawer,
+  })),
+);
 
 export default async function ShopLayout({
   children,

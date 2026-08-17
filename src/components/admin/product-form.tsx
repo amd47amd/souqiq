@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from "react";
 import { ImagePlus, Loader2 } from "lucide-react";
 import { upsertProductAction } from "@/actions/admin";
 import { uploadProductImageAction } from "@/actions/upload";
+import { compressImageFile } from "@/lib/compress-image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,8 +64,14 @@ export function ProductForm({
     setError(null);
     setUploading(true);
     try {
+      let toUpload = file;
+      try {
+        toUpload = await compressImageFile(file);
+      } catch {
+        toUpload = file;
+      }
       const body = new FormData();
-      body.set("file", file);
+      body.set("file", toUpload);
       const result = await uploadProductImageAction(body);
       if (!result.ok) {
         setError(result.message);

@@ -35,7 +35,7 @@ export function ProductCard({
             priority={priority}
             quality={65}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -49,18 +49,18 @@ export function ProductCard({
       <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {onSale && (
-            <span className="rounded-full bg-accent/95 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase backdrop-blur-sm">
+            <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase">
               Sale
             </span>
           )}
           {product.isTrending && !onSale && (
-            <span className="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase backdrop-blur-md">
+            <span className="rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
               Trending
             </span>
           )}
         </div>
         {outOfStock && (
-          <span className="rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase backdrop-blur-md">
+          <span className="rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-white uppercase">
             Sold out
           </span>
         )}
@@ -92,7 +92,7 @@ export function ProductCard({
           <span
             aria-hidden="true"
             className={cn(
-              "inline-flex h-8 shrink-0 items-center rounded-full bg-white/15 px-3 text-[11px] font-semibold text-white backdrop-blur-md",
+              "inline-flex h-8 shrink-0 items-center rounded-full bg-white/20 px-3 text-[11px] font-semibold text-white",
               "opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0",
             )}
           >
@@ -107,9 +107,12 @@ export function ProductCard({
 export function ProductGrid({
   products,
   className,
+  priorityCount = 0,
 }: {
   products: ProductCardData[];
   className?: string;
+  /** Only the first visible cards should preload — extra priority fights LCP. */
+  priorityCount?: number;
 }) {
   if (products.length === 0) {
     return (
@@ -134,7 +137,7 @@ export function ProductGrid({
         <ProductCard
           key={product.id}
           product={product}
-          priority={index < 2}
+          priority={index < priorityCount}
         />
       ))}
     </div>

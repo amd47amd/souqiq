@@ -11,24 +11,22 @@ type Props = {
 
 export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
   return (
-    <section className="relative isolate min-h-[max(640px,min(92dvh,880px))] overflow-hidden bg-[#0f1f4d]">
+    <section className="relative isolate min-h-[min(78dvh,720px)] overflow-hidden bg-[#0f1f4d]">
       {imageUrl ? (
         <Image
           src={imageUrl}
           alt={imageAlt}
           fill
           priority
-          quality={70}
-          sizes="100vw"
+          quality={65}
+          sizes="(max-width: 768px) 100vw, 1600px"
           className="object-cover object-center"
         />
       ) : null}
 
-      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(12,28,72,0.92)_0%,rgba(18,40,110,0.78)_42%,rgba(139,94,60,0.45)_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.14),transparent_42%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(12,28,72,0.88)_0%,rgba(18,40,110,0.72)_50%,rgba(12,28,72,0.45)_100%)]" />
 
-      <div className="relative mx-auto flex min-h-[max(640px,min(92dvh,880px))] max-w-7xl flex-col justify-end px-4 pb-20 pt-28 sm:px-6 sm:pb-24 lg:px-8 lg:pb-28">
+      <div className="relative mx-auto flex min-h-[min(78dvh,720px)] max-w-7xl flex-col justify-end px-4 pb-16 pt-24 sm:px-6 sm:pb-20 lg:px-8 lg:pb-24">
         <div className="hero-enter max-w-2xl">
           <p className="text-[11px] font-semibold tracking-[0.28em] text-white/70 uppercase sm:text-xs">
             Marketplace · Iraq
@@ -43,7 +41,7 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
             <Button
               asChild
               size="lg"
-              className="h-12 bg-white px-6 text-primary shadow-lg shadow-black/10 hover:bg-white/95"
+              className="h-12 bg-white px-6 text-primary hover:bg-white/95"
             >
               <Link href="/products">
                 Shop the collection
@@ -54,7 +52,7 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 border-white/35 bg-white/5 px-6 text-white backdrop-blur-sm hover:bg-white/15 hover:text-white"
+              className="h-12 border-white/35 bg-white/10 px-6 text-white hover:bg-white/20 hover:text-white"
             >
               <Link href="/categories">Browse categories</Link>
             </Button>

@@ -5,7 +5,6 @@ import {
   useCallback,
   useEffect,
   useState,
-  type MouseEvent as ReactMouseEvent,
 } from "react";
 import {
   ChevronLeft,
@@ -32,8 +31,6 @@ export function ProductGallery({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [hoverZoom, setHoverZoom] = useState(false);
-  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
 
   const active = images[activeIndex] ?? images[0];
   const hasMultiple = images.length > 1;
@@ -49,16 +46,6 @@ export function ProductGallery({
 
   const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
-
-  function handleMouseMove(event: ReactMouseEvent<HTMLDivElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    setZoomOrigin({
-      x: Math.min(100, Math.max(0, x)),
-      y: Math.min(100, Math.max(0, y)),
-    });
-  }
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -91,16 +78,7 @@ export function ProductGallery({
       <div className="lg:sticky lg:top-24">
         <div className="flex flex-col gap-3 lg:flex-row-reverse lg:gap-4">
           <div className="relative min-w-0 flex-1">
-            <div
-              className="group relative overflow-hidden rounded-[1.25rem] bg-[#eef0f4]"
-              onMouseEnter={() => {
-                if (window.matchMedia("(hover: hover)").matches) {
-                  setHoverZoom(true);
-                }
-              }}
-              onMouseLeave={() => setHoverZoom(false)}
-              onMouseMove={handleMouseMove}
-            >
+            <div className="relative overflow-hidden rounded-[1.25rem] bg-[#eef0f4]">
               <button
                 type="button"
                 className="relative block aspect-[4/5] w-full cursor-zoom-in sm:aspect-[5/6]"
@@ -113,34 +91,25 @@ export function ProductGallery({
                   alt={active.alt ?? productName}
                   fill
                   priority
+                  quality={70}
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className={cn(
-                    "object-cover transition-transform duration-200 ease-out",
-                    hoverZoom && "scale-[1.75]",
-                  )}
-                  style={
-                    hoverZoom
-                      ? {
-                          transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
-                        }
-                      : undefined
-                  }
+                  className="object-cover"
                 />
               </button>
 
               <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">
                 {hasMultiple ? (
-                  <span className="rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+                  <span className="rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-semibold text-white">
                     {activeIndex + 1} / {images.length}
                   </span>
                 ) : (
                   <span />
                 )}
-                <span className="hidden items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md md:inline-flex">
+                <span className="hidden items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white md:inline-flex">
                   <Search className="size-3.5" />
-                  Hover to zoom
+                  Click to zoom
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md md:hidden">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white md:hidden">
                   <Search className="size-3.5" />
                   Tap to zoom
                 </span>
@@ -154,7 +123,7 @@ export function ProductGallery({
                       event.stopPropagation();
                       goPrev();
                     }}
-                    className="absolute top-1/2 left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md backdrop-blur-md transition hover:bg-white"
+                    className="absolute top-1/2 left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground hover:bg-white"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="size-5" />
@@ -165,7 +134,7 @@ export function ProductGallery({
                       event.stopPropagation();
                       goNext();
                     }}
-                    className="absolute top-1/2 right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md backdrop-blur-md transition hover:bg-white"
+                    className="absolute top-1/2 right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground hover:bg-white"
                     aria-label="Next image"
                   >
                     <ChevronRight className="size-5" />
@@ -185,7 +154,7 @@ export function ProductGallery({
                     type="button"
                     onClick={() => setActiveIndex(index)}
                     className={cn(
-                      "group/thumb relative size-[64px] shrink-0 overflow-hidden rounded-2xl transition-all duration-300 lg:size-[72px] lg:w-full",
+                      "group/thumb relative size-[64px] shrink-0 overflow-hidden rounded-2xl lg:size-[72px] lg:w-full",
                       isActive
                         ? "opacity-100 shadow-[0_10px_24px_-14px_rgba(18,21,26,0.55)]"
                         : "opacity-45 hover:opacity-85",
@@ -198,10 +167,7 @@ export function ProductGallery({
                       alt={image.alt ?? `${productName} ${index + 1}`}
                       fill
                       sizes="72px"
-                      className={cn(
-                        "object-cover transition-transform duration-500",
-                        isActive ? "scale-100" : "scale-105 group-hover/thumb:scale-100",
-                      )}
+                      className="object-cover"
                     />
                     {/* Soft active cue — bottom bar, no blue box */}
                     <span
@@ -270,7 +236,7 @@ function Lightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`${productName} gallery`}
-      className="fixed inset-0 z-[80] flex flex-col bg-black/92 backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex flex-col bg-black/92"
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 text-white sm:px-6">
         <div>

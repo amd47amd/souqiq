@@ -88,25 +88,24 @@
     font-family: var(--font-display);
   }
 
-  /* Scroll / mount reveals — soft rise from below */
+  /* Scroll reveals — short, no lingering will-change (that keeps GPU layers) */
   .reveal {
     transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
+      opacity 0.35s ease-out,
+      transform 0.35s ease-out;
   }
 
   .reveal-subtle {
-    transition-duration: 0.55s;
+    transition-duration: 0.28s;
   }
 
   .reveal-hidden {
     opacity: 0;
-    transform: translate3d(0, 36px, 0);
+    transform: translate3d(0, 12px, 0);
   }
 
   .reveal-subtle.reveal-hidden {
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 8px, 0);
   }
 
   .reveal-shown {
@@ -114,47 +113,18 @@
     transform: translate3d(0, 0, 0);
   }
 
-  /* Hero: gentle presence on first paint */
   .hero-enter {
-    animation: hero-enter 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: hero-enter 0.35s ease-out both;
   }
 
   .hero-enter-delay {
-    animation: hero-enter 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    animation: hero-enter 0.35s ease-out 0.06s both;
   }
 
   @keyframes hero-enter {
     from {
       opacity: 0;
-      transform: translate3d(0, 22px, 0);
-    }
-    to {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
-  }
-
-  .product-grid > .product-card {
-    animation: product-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
-  .product-grid > .product-card:nth-child(1) { animation-delay: 0.04s; }
-  .product-grid > .product-card:nth-child(2) { animation-delay: 0.08s; }
-  .product-grid > .product-card:nth-child(3) { animation-delay: 0.12s; }
-  .product-grid > .product-card:nth-child(4) { animation-delay: 0.16s; }
-  .product-grid > .product-card:nth-child(5) { animation-delay: 0.2s; }
-  .product-grid > .product-card:nth-child(6) { animation-delay: 0.24s; }
-  .product-grid > .product-card:nth-child(7) { animation-delay: 0.28s; }
-  .product-grid > .product-card:nth-child(8) { animation-delay: 0.32s; }
-  .product-grid > .product-card:nth-child(9) { animation-delay: 0.36s; }
-  .product-grid > .product-card:nth-child(10) { animation-delay: 0.4s; }
-  .product-grid > .product-card:nth-child(11) { animation-delay: 0.44s; }
-  .product-grid > .product-card:nth-child(12) { animation-delay: 0.48s; }
-
-  @keyframes product-card-in {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 20px, 0);
+      transform: translate3d(0, 10px, 0);
     }
     to {
       opacity: 1;
@@ -172,8 +142,7 @@
     }
 
     .hero-enter,
-    .hero-enter-delay,
-    .product-grid > .product-card {
+    .hero-enter-delay {
       animation: none !important;
     }
   }
