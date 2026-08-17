@@ -297,7 +297,7 @@ function TrustItem({
   text: string;
 }) {
   return (
-    <li className="rounded-2xl bg-[#f3f5f8] px-3.5 py-3.5 transition-transform duration-300 hover:-translate-y-0.5">
+    <li className="soft-lift rounded-2xl bg-[#f3f5f8] px-3.5 py-3.5">
       <div className="flex size-8 items-center justify-center rounded-full bg-white text-primary shadow-sm">
         {icon}
       </div>

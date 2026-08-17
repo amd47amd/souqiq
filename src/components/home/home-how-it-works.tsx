@@ -36,7 +36,7 @@ export function HomeHowItWorks() {
             return (
               <li
                 key={step.title}
-                className="group relative overflow-hidden rounded-[1.35rem] border border-border/70 bg-white p-5 shadow-[0_12px_40px_-28px_rgba(18,21,26,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(26,86,219,0.35)] sm:p-6"
+                className="soft-lift group relative overflow-hidden rounded-[1.35rem] border border-border/70 bg-white p-5 shadow-[0_12px_40px_-28px_rgba(18,21,26,0.35)] hover:shadow-[0_16px_36px_-26px_rgba(26,86,219,0.22)] sm:p-6"
               >
                 <span
                   aria-hidden

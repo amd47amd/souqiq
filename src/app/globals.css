@@ -302,6 +302,26 @@
     }
   }
 
+  .soft-lift {
+    transition:
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .soft-zoom {
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .soft-lift:hover {
+      transform: translate3d(0, -3px, 0);
+    }
+
+    .group:hover .soft-zoom {
+      transform: scale(1.03);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .reveal,
     .reveal-hidden,
@@ -328,6 +348,12 @@
 
     .shine-hover::after {
       display: none;
+    }
+
+    .soft-lift,
+    .soft-zoom {
+      transition: none !important;
+      transform: none !important;
     }
   }
 }

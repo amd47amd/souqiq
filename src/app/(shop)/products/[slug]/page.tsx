@@ -181,7 +181,7 @@ function DetailCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border/80 bg-white/80 p-5 sm:p-6 transition-transform duration-300 hover:-translate-y-0.5">
+    <div className="soft-lift rounded-2xl border border-border/80 bg-white/80 p-5 sm:p-6">
       <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
         {icon}
       </div>

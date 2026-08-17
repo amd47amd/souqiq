@@ -93,7 +93,7 @@ export function ProductGallery({
                   priority
                   quality={70}
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                  className="soft-zoom object-cover"
                 />
               </button>
 
