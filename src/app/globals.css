@@ -157,26 +157,6 @@
     }
   }
 
-  .shine-hover::after {
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    inset: 0;
-    z-index: 6;
-    background: linear-gradient(
-      105deg,
-      transparent 38%,
-      rgb(255 255 255 / 0.22) 50%,
-      transparent 62%
-    );
-    transform: translate3d(-130%, 0, 0);
-    transition: transform 0.7s ease;
-  }
-
-  .shine-hover:hover::after {
-    transform: translate3d(130%, 0, 0);
-  }
-
   .banner-glow {
     background: linear-gradient(120deg, #143a9e 0%, #1a56db 42%, #8b5e3c 100%);
     background-size: 160% 160%;
@@ -189,22 +169,6 @@
     }
     to {
       background-position: 100% 50%;
-    }
-  }
-
-  .wa-pulse {
-    animation: wa-pulse 2.8s ease-out infinite;
-  }
-
-  @keyframes wa-pulse {
-    0% {
-      transform: scale(1);
-      opacity: 0.45;
-    }
-    70%,
-    100% {
-      transform: scale(1.45);
-      opacity: 0;
     }
   }
 
@@ -238,20 +202,6 @@
     50% {
       opacity: 0.45;
       transform: scale(0.72);
-    }
-  }
-
-  .sale-pulse {
-    animation: sale-pulse 2.6s ease-in-out infinite;
-  }
-
-  @keyframes sale-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgb(139 94 60 / 0.35);
-    }
-    70% {
-      box-shadow: 0 0 0 6px rgb(139 94 60 / 0);
     }
   }
 
@@ -304,21 +254,21 @@
 
   .soft-lift {
     transition:
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .soft-zoom {
-    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 1.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .soft-lift:hover {
-      transform: translate3d(0, -3px, 0);
+      transform: translate3d(0, -2px, 0);
     }
 
     .group:hover .soft-zoom {
-      transform: scale(1.03);
+      transform: scale(1.018);
     }
   }
 
@@ -337,17 +287,11 @@
     .marquee,
     .nav-progress-bar,
     .banner-glow,
-    .wa-pulse,
     .orb-drift,
     .orb-drift-slow,
     .live-dot,
-    .sale-pulse,
     .product-grid > .product-card {
       animation: none !important;
-    }
-
-    .shine-hover::after {
-      display: none;
     }
 
     .soft-lift,

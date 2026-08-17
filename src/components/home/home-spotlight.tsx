@@ -27,7 +27,7 @@ export function HomeSpotlight({ product }: { product: ProductCardData }) {
         <Link
           href={`/products/${product.slug}`}
           prefetch
-          className="shine-hover group relative isolate min-h-[380px] overflow-hidden sm:min-h-[460px] lg:min-h-[560px]"
+          className="group relative isolate min-h-[380px] overflow-hidden sm:min-h-[460px] lg:min-h-[560px]"
         >
           <PendingLinkOverlay />
           {image ? (

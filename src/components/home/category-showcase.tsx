@@ -27,7 +27,7 @@ export function CategoryShowcase({
             href={`/categories/${category.slug}`}
             prefetch
             className={cn(
-              "shine-hover group relative isolate overflow-hidden rounded-2xl bg-[#1a2744]",
+              "group relative isolate overflow-hidden rounded-2xl bg-[#1a2744]",
               featured
                 ? "min-h-[280px] sm:min-h-[320px] lg:col-span-2 lg:row-span-2 lg:min-h-full"
                 : "min-h-[200px] sm:min-h-[220px]",

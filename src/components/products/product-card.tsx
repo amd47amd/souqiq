@@ -25,7 +25,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="product-card shine-hover group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+      className="product-card group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
       prefetch
     >
       <PendingLinkOverlay />
@@ -52,7 +52,7 @@ export function ProductCard({
       <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {onSale && (
-            <span className="sale-pulse rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase">
+            <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase">
               Sale
             </span>
           )}
@@ -96,7 +96,7 @@ export function ProductCard({
             aria-hidden="true"
             className={cn(
               "inline-flex h-8 shrink-0 items-center rounded-full bg-white/20 px-3 text-[11px] font-semibold text-white",
-              "opacity-80 sm:opacity-0 sm:translate-y-1 sm:transition-all sm:duration-300 sm:group-hover:opacity-100 sm:group-hover:translate-y-0",
+              "opacity-80 sm:opacity-0 sm:transition-opacity sm:duration-700 sm:ease-[cubic-bezier(0.16,1,0.3,1)] sm:group-hover:opacity-100",
             )}
           >
             View
