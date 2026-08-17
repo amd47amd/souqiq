@@ -19,6 +19,18 @@ export function Footer() {
             Premium shopping across Iraq. Cash on delivery to every governorate —
             clothing, electronics, home, and fragrance.
           </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {["Cash on delivery", "18 governorates", "Prices in IQD"].map(
+              (label) => (
+                <span
+                  key={label}
+                  className="rounded-full border border-border/80 bg-white px-3 py-1 text-[11px] font-medium tracking-wide text-muted-foreground"
+                >
+                  {label}
+                </span>
+              ),
+            )}
+          </div>
           <a
             href={whatsappHref}
             target="_blank"
@@ -34,7 +46,8 @@ export function Footer() {
         <FooterColumn title="Account" links={FOOTER_LINKS.account} />
       </div>
 
-      <div className="border-t border-border/70">
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      <div>
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <p>
             © {year} {APP_NAME}. All rights reserved.

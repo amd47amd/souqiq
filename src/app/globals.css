@@ -131,6 +131,130 @@
     }
   }
 
+  .hero-kenburns {
+    animation: hero-kenburns 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-kenburns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+
+  .marquee {
+    animation: marquee 38s linear infinite;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .shine-hover::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: linear-gradient(
+      105deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.22) 50%,
+      transparent 62%
+    );
+    transform: translate3d(-130%, 0, 0);
+    transition: transform 0.7s ease;
+  }
+
+  .shine-hover:hover::after {
+    transform: translate3d(130%, 0, 0);
+  }
+
+  .banner-glow {
+    background: linear-gradient(120deg, #143a9e 0%, #1a56db 42%, #8b5e3c 100%);
+    background-size: 160% 160%;
+    animation: banner-glow 14s ease-in-out infinite alternate;
+  }
+
+  @keyframes banner-glow {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+
+  .wa-pulse {
+    animation: wa-pulse 2.8s ease-out infinite;
+  }
+
+  @keyframes wa-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.45;
+    }
+    70%,
+    100% {
+      transform: scale(1.45);
+      opacity: 0;
+    }
+  }
+
+  .orb-drift {
+    animation: orb-drift 18s ease-in-out infinite alternate;
+  }
+
+  .orb-drift-slow {
+    animation: orb-drift 26s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes orb-drift {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(28px, -18px, 0);
+    }
+  }
+
+  .live-dot {
+    animation: live-dot 2.2s ease-in-out infinite;
+  }
+
+  @keyframes live-dot {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.72);
+    }
+  }
+
+  .sale-pulse {
+    animation: sale-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes sale-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(139 94 60 / 0.35);
+    }
+    70% {
+      box-shadow: 0 0 0 6px rgb(139 94 60 / 0);
+    }
+  }
+
   .hero-enter {
     animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -189,9 +313,21 @@
 
     .hero-enter,
     .hero-enter-delay,
+    .hero-kenburns,
+    .marquee,
     .nav-progress-bar,
+    .banner-glow,
+    .wa-pulse,
+    .orb-drift,
+    .orb-drift-slow,
+    .live-dot,
+    .sale-pulse,
     .product-grid > .product-card {
       animation: none !important;
+    }
+
+    .shine-hover::after {
+      display: none;
     }
   }
 }

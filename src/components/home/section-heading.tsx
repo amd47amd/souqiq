@@ -27,7 +27,8 @@ export function SectionHeading({
     >
       <div className="max-w-xl">
         {eyebrow ? (
-          <p className="mb-2 text-[11px] font-semibold tracking-[0.2em] text-primary uppercase">
+          <p className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-primary uppercase">
+            <span className="live-dot size-1.5 rounded-full bg-accent" />
             {eyebrow}
           </p>
         ) : (
@@ -46,7 +47,7 @@ export function SectionHeading({
         <Button
           asChild
           variant="ghost"
-          className="self-start text-primary hover:bg-primary/5 hover:text-primary sm:self-auto"
+          className="self-start text-primary hover:bg-primary/5 hover:text-primary sm:self-auto [&_svg]:transition-transform [&_svg]:duration-200 hover:[&_svg]:translate-x-0.5"
         >
           <Link href={href}>
             {linkLabel}

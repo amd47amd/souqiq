@@ -14,7 +14,8 @@ export function PageIntro({
   return (
     <div className={cn("mb-8 sm:mb-10", className)}>
       {eyebrow ? (
-        <p className="text-[11px] font-semibold tracking-[0.2em] text-primary uppercase">
+        <p className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-primary uppercase">
+          <span className="live-dot size-1.5 rounded-full bg-accent" />
           {eyebrow}
         </p>
       ) : null}

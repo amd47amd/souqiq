@@ -148,7 +148,7 @@ export function Navbar() {
           >
             <ShoppingBag />
             {mounted && totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+              <span className="absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground ring-2 ring-white">
                 {totalItems > 9 ? "9+" : totalItems}
               </span>
             )}

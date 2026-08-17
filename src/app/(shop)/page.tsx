@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/layout/page-transition";
 import { Reveal } from "@/components/motion/reveal";
 import { HomeHero } from "@/components/home/home-hero";
+import { HomeMarquee } from "@/components/home/home-marquee";
 import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { CategoryShowcase } from "@/components/home/category-showcase";
 import { SectionHeading } from "@/components/home/section-heading";
@@ -40,6 +41,7 @@ export default async function HomePage() {
   return (
     <PageTransition>
       <HomeHero imageUrl={heroImage} imageAlt={heroAlt} />
+      <HomeMarquee />
 
       <Reveal>
         <HomeHowItWorks />
@@ -110,25 +112,42 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <Reveal subtle>
-          <div className="flex flex-col items-start justify-between gap-6 rounded-[1.5rem] border border-border/80 bg-[#f7f8fb] px-6 py-8 sm:flex-row sm:items-center sm:px-10 sm:py-10">
-            <div>
-              <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
-                Looking for something specific?
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Browse the full catalog or jump into a category.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild>
-                <Link href="/products">
-                  All products
-                  <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/categories">Categories</Link>
-              </Button>
+          <div className="relative overflow-hidden rounded-[1.5rem] bg-[#0f1f4d] px-6 py-8 sm:px-10 sm:py-10">
+            <div
+              aria-hidden
+              className="orb-drift pointer-events-none absolute -top-10 -right-10 size-40 rounded-full bg-[radial-gradient(circle,rgba(196,165,116,0.28),transparent_70%)]"
+            />
+            <div className="relative flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+              <div>
+                <p className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-white/60 uppercase">
+                  <span className="live-dot size-1.5 rounded-full bg-[#c4a574]" />
+                  Catalog
+                </p>
+                <h2 className="mt-2 font-display text-xl font-semibold tracking-tight text-white sm:text-2xl">
+                  Looking for something specific?
+                </h2>
+                <p className="mt-2 text-sm text-white/70">
+                  Browse the full catalog or jump into a category.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  asChild
+                  className="group rounded-full bg-white text-primary hover:bg-white/95"
+                >
+                  <Link href="/products">
+                    All products
+                    <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                >
+                  <Link href="/categories">Categories</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </Reveal>

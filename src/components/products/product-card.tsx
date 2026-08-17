@@ -25,7 +25,7 @@ export function ProductCard({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="product-card group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+      className="product-card shine-hover group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
       prefetch
     >
       <PendingLinkOverlay />
@@ -38,7 +38,7 @@ export function ProductCard({
             priority={priority}
             quality={65}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            className="object-cover transition-[transform,filter] duration-500 ease-out group-hover:scale-[1.06] group-hover:brightness-110"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -52,7 +52,7 @@ export function ProductCard({
       <div className="absolute top-3 left-3 right-3 z-10 flex items-start justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {onSale && (
-            <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase">
+            <span className="sale-pulse rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-accent-foreground uppercase">
               Sale
             </span>
           )}

@@ -6,7 +6,7 @@ import { APP_NAME } from "@/lib/constants";
 export function HomeCodBanner() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(120deg,#143a9e_0%,#1a56db_45%,#8b5e3c_140%)]" />
+      <div className="banner-glow absolute inset-0" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(255,255,255,0.16),transparent_40%)]" />
       <div className="relative mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-16 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-20 lg:px-8">
         <div className="max-w-xl">
@@ -23,11 +23,11 @@ export function HomeCodBanner() {
         <Button
           asChild
           size="lg"
-          className="h-12 shrink-0 rounded-full bg-white px-7 text-primary hover:bg-white/95"
+          className="group h-12 shrink-0 rounded-full bg-white px-7 text-primary hover:bg-white/95"
         >
           <Link href="/products">
             Start shopping
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </Button>
       </div>

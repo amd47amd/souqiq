@@ -27,7 +27,7 @@ export function CategoryShowcase({
             href={`/categories/${category.slug}`}
             prefetch
             className={cn(
-              "group relative isolate overflow-hidden rounded-2xl bg-[#1a2744]",
+              "shine-hover group relative isolate overflow-hidden rounded-2xl bg-[#1a2744]",
               featured
                 ? "min-h-[280px] sm:min-h-[320px] lg:col-span-2 lg:row-span-2 lg:min-h-full"
                 : "min-h-[200px] sm:min-h-[220px]",
@@ -45,7 +45,7 @@ export function CategoryShowcase({
                     ? "(max-width: 1024px) 100vw, 50vw"
                     : "(max-width: 1024px) 50vw, 25vw"
                 }
-                className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                className="object-cover transition-[transform,filter] duration-700 ease-out group-hover:scale-[1.06] group-hover:brightness-110"
               />
             ) : null}
 
