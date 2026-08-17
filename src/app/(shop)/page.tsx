@@ -48,6 +48,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <Reveal>
           <SectionHeading
+            eyebrow="Collections"
             title="Shop by category"
             description={`Curated collections that define ${APP_NAME}.`}
             href="/categories"
@@ -72,6 +73,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
             <Reveal>
               <SectionHeading
+                eyebrow="This week"
                 title="Trending now"
                 description="What shoppers across Iraq are choosing this week."
                 href="/products?trending=1"
@@ -89,6 +91,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <Reveal>
             <SectionHeading
+              eyebrow="Selection"
               title="Featured picks"
               description="Hand-selected pieces from the catalog."
               href="/products"
@@ -107,7 +110,7 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <Reveal subtle>
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-[#f3f5f8] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-[1.5rem] border border-border/80 bg-[#f7f8fb] px-6 py-8 sm:flex-row sm:items-center sm:px-10 sm:py-10">
             <div>
               <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
                 Looking for something specific?

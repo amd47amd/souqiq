@@ -69,6 +69,11 @@
     @apply scroll-smooth;
   }
 
+  ::selection {
+    background: rgb(26 86 219 / 0.16);
+    color: #12151a;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);

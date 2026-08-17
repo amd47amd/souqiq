@@ -159,6 +159,7 @@ async function RelatedProducts({
     <Reveal>
       <section className="mt-16 border-t border-border/80 pt-14 lg:mt-20">
         <SectionHeading
+          eyebrow="Related"
           title={`More in ${categoryName}`}
           description="Continue exploring this collection."
           href={`/products?category=${categorySlug}`}

@@ -80,7 +80,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "rounded-full px-3 py-2 text-sm font-medium transition-colors",
                   active
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/75 hover:bg-muted hover:text-foreground",
@@ -101,7 +101,7 @@ export function Navbar() {
             <Input
               name="q"
               placeholder="Search SouqIQ…"
-              className="h-10 pl-9"
+              className="h-10 rounded-full border-border/80 bg-[#f5f6f8] pl-9"
               aria-label="Search products"
             />
           </form>

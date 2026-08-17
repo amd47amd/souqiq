@@ -21,7 +21,6 @@ export function WhatsAppFloat({ className }: Props) {
       className={cn(
         "fixed z-40 flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1ebe57] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]/50 focus-visible:ring-offset-2",
         "right-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] md:bottom-6",
-        "max-md:bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))]",
         className,
       )}
     >

@@ -96,7 +96,7 @@ export function ProductCard({
             aria-hidden="true"
             className={cn(
               "inline-flex h-8 shrink-0 items-center rounded-full bg-white/20 px-3 text-[11px] font-semibold text-white",
-              "opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0",
+              "opacity-80 sm:opacity-0 sm:translate-y-1 sm:transition-all sm:duration-300 sm:group-hover:opacity-100 sm:group-hover:translate-y-0",
             )}
           >
             View

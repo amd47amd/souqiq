@@ -25,24 +25,21 @@ export function HomeHowItWorks() {
     <section className="border-y border-border/70 bg-[#f7f8fb]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <SectionHeading
+          eyebrow="Process"
           title="How it works"
           description="Three simple steps from browsing to cash on delivery."
         />
 
-        <ol className="grid gap-10 sm:grid-cols-3 sm:gap-8 lg:gap-12">
+        <ol className="grid gap-4 sm:grid-cols-3 sm:gap-5 lg:gap-6">
           {STEPS.map((step, index) => {
             const Icon = step.icon;
             return (
-              <li key={step.title} className="relative">
-                {index < STEPS.length - 1 ? (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute top-7 left-[calc(50%+2.5rem)] hidden h-px w-[calc(100%-1.5rem)] bg-gradient-to-r from-primary/35 to-transparent sm:block"
-                  />
-                ) : null}
-
+              <li
+                key={step.title}
+                className="group relative rounded-[1.35rem] border border-border/70 bg-white p-5 shadow-[0_12px_40px_-28px_rgba(18,21,26,0.35)] transition-transform duration-300 hover:-translate-y-0.5 sm:p-6"
+              >
                 <div className="flex items-start gap-4 sm:flex-col sm:items-start sm:gap-5">
-                  <div className="relative flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white text-primary shadow-[0_10px_30px_-18px_rgba(26,86,219,0.55)] ring-1 ring-primary/10">
+                  <div className="relative flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/10 transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
                     <Icon className="size-5" strokeWidth={1.75} />
                     <span className="absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-white">
                       {index + 1}

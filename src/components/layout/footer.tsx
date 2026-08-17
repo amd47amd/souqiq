@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { APP_NAME, DEFAULT_WHATSAPP_NUMBER, FOOTER_LINKS } from "@/lib/constants";
-import { Separator } from "@/components/ui/separator";
 
 export function Footer() {
   const year = 2026;
   const whatsappHref = `https://wa.me/${DEFAULT_WHATSAPP_NUMBER.replace(/\D/g, "")}`;
 
   return (
-    <footer className="mt-auto border-t border-border bg-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+    <footer className="mt-auto border-t border-border/80 bg-[#f7f8fb]">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8 lg:py-20">
         <div className="md:col-span-2 lg:col-span-1">
           <Link
             href="/"
@@ -35,13 +34,15 @@ export function Footer() {
         <FooterColumn title="Account" links={FOOTER_LINKS.account} />
       </div>
 
-      <Separator />
-
-      <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-        <p>
-          © {year} {APP_NAME}. All rights reserved.
-        </p>
-        <p className="text-xs">Prices in Iraqi Dinar (IQD) · COD available nationwide</p>
+      <div className="border-t border-border/70">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p>
+            © {year} {APP_NAME}. All rights reserved.
+          </p>
+          <p className="text-xs tracking-wide">
+            Prices in Iraqi Dinar (IQD) · COD nationwide
+          </p>
+        </div>
       </div>
     </footer>
   );
@@ -64,7 +65,7 @@ function FooterColumn({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-primary"
+              className="text-sm text-muted-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>

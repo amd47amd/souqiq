@@ -26,6 +26,7 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
 
       <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(12,28,72,0.92)_0%,rgba(18,40,110,0.78)_42%,rgba(139,94,60,0.45)_100%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,255,255,0.14),transparent_42%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background to-transparent" />
 
       <div className="relative mx-auto flex min-h-[min(78dvh,720px)] max-w-7xl flex-col justify-end px-4 pb-16 pt-24 sm:px-6 sm:pb-20 lg:px-8 lg:pb-24">
         <div className="hero-enter max-w-2xl">
@@ -42,7 +43,7 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
             <Button
               asChild
               size="lg"
-              className="h-12 bg-white px-6 text-primary hover:bg-white/95"
+              className="h-12 rounded-full bg-white px-7 text-primary hover:bg-white/95"
             >
               <Link href="/products">
                 Shop the collection
@@ -53,11 +54,19 @@ export function HomeHero({ imageUrl, imageAlt = "SouqIQ marketplace" }: Props) {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 border-white/35 bg-white/10 px-6 text-white hover:bg-white/20 hover:text-white"
+              className="h-12 rounded-full border-white/35 bg-white/10 px-7 text-white hover:bg-white/20 hover:text-white"
             >
               <Link href="/categories">Browse categories</Link>
             </Button>
           </div>
+
+          <ul className="hero-enter-delay mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-semibold tracking-[0.16em] text-white/65 uppercase">
+            <li>Cash on delivery</li>
+            <li aria-hidden className="h-1 w-1 rounded-full bg-white/40" />
+            <li>18 governorates</li>
+            <li aria-hidden className="hidden h-1 w-1 rounded-full bg-white/40 sm:block" />
+            <li className="hidden sm:block">Prices in IQD</li>
+          </ul>
         </div>
       </div>
     </section>
