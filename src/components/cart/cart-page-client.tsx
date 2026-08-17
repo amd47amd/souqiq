@@ -47,9 +47,9 @@ export function CartPageClient() {
         {items.map((item) => (
           <li
             key={item.variantId}
-            className="flex gap-4 rounded-xl border border-border bg-white p-4"
+            className="flex gap-4 rounded-[1.35rem] border border-border/80 bg-white p-4 sm:p-5"
           >
-            <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-muted sm:size-28">
+            <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-muted sm:size-28">
               {item.imageUrl ? (
                 <Image
                   src={item.imageUrl}
@@ -82,7 +82,7 @@ export function CartPageClient() {
               <div className="mt-3 flex items-center gap-2">
                 <button
                   type="button"
-                  className="flex size-8 items-center justify-center rounded-md border border-border text-sm hover:bg-muted"
+                  className="flex size-10 items-center justify-center rounded-xl border border-border text-sm transition-colors hover:bg-muted"
                   onClick={() =>
                     updateQuantity(item.variantId, item.quantity - 1)
                   }
@@ -95,7 +95,7 @@ export function CartPageClient() {
                 </span>
                 <button
                   type="button"
-                  className="flex size-8 items-center justify-center rounded-md border border-border text-sm hover:bg-muted"
+                  className="flex size-10 items-center justify-center rounded-xl border border-border text-sm transition-colors hover:bg-muted"
                   onClick={() =>
                     updateQuantity(item.variantId, item.quantity + 1)
                   }
@@ -116,7 +116,7 @@ export function CartPageClient() {
         ))}
       </ul>
 
-      <aside className="h-fit rounded-xl border border-border bg-white p-6 lg:sticky lg:top-24">
+      <aside className="h-fit rounded-[1.35rem] border border-border/80 bg-white p-6 shadow-[0_16px_40px_-32px_rgba(18,21,26,0.4)] lg:sticky lg:top-24">
         <h2 className="font-display text-lg font-semibold">Order summary</h2>
         <div className="mt-4 space-y-2 text-sm">
           <div className="flex justify-between">
@@ -133,10 +133,10 @@ export function CartPageClient() {
           <span>Total</span>
           <span className="text-primary">{formatIQD(subtotal)}</span>
         </div>
-        <Button asChild size="lg" className="mt-6 w-full">
+        <Button asChild size="lg" className="mt-6 w-full rounded-full">
           <Link href="/checkout">Proceed to checkout</Link>
         </Button>
-        <Button asChild variant="outline" className="mt-2 w-full">
+        <Button asChild variant="outline" className="mt-2 w-full rounded-full">
           <Link href="/products">Continue shopping</Link>
         </Button>
         <p className="mt-4 text-center text-xs text-muted-foreground">

@@ -49,7 +49,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           title="Order placed"
           subtitle={`Thank you, ${order.customerName}. Your COD order is confirmed.`}
         >
-          <div className="mt-6 rounded-lg bg-muted/50 px-4 py-3 text-left text-sm">
+          <div className="mt-6 rounded-2xl bg-[#f7f8fb] px-4 py-4 text-left text-sm">
             <div className="flex justify-between gap-4">
               <span className="text-muted-foreground">Order number</span>
               <span className="font-semibold">{order.orderNumber}</span>

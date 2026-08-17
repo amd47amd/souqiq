@@ -94,7 +94,7 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
         )}
       />
 
-      <div className="space-y-6 rounded-xl border border-border bg-white p-6 sm:p-8">
+      <div className="space-y-6 rounded-[1.35rem] border border-border/80 bg-white p-6 sm:p-8">
         <div>
           <h2 className="font-display text-xl font-semibold">
             Delivery details
@@ -156,7 +156,7 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
               onChange={(e) => setGovernorateId(e.target.value)}
               required
               disabled={pending}
-              className="flex h-10 w-full rounded-lg border border-input bg-white px-3 py-2 text-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30"
+              className="flex h-10 w-full rounded-xl border border-input bg-white px-3 py-2 text-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30"
             >
               {governorates.map((g) => (
                 <option key={g.id} value={g.id}>
@@ -195,12 +195,12 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
               rows={3}
               disabled={pending}
               placeholder="Gate code, preferred time, etc."
-              className="flex w-full rounded-lg border border-input bg-white px-3 py-2 text-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30"
+              className="flex w-full rounded-xl border border-input bg-white px-3 py-2 text-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30"
             />
           </div>
         </div>
 
-        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3">
+        <div className="rounded-2xl bg-[#f7f8fb] px-4 py-4">
           <p className="text-sm font-medium">Payment method</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Cash on Delivery (COD) — pay when your order arrives.
@@ -208,13 +208,13 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
         </div>
       </div>
 
-      <aside className="h-fit space-y-4 rounded-xl border border-border bg-white p-6 lg:sticky lg:top-24">
+      <aside className="h-fit space-y-4 rounded-[1.35rem] border border-border/80 bg-white p-6 shadow-[0_16px_40px_-32px_rgba(18,21,26,0.4)] lg:sticky lg:top-24">
         <h2 className="font-display text-lg font-semibold">Order summary</h2>
 
         <ul className="max-h-64 space-y-3 overflow-y-auto">
           {items.map((item) => (
             <li key={item.variantId} className="flex gap-3">
-              <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted">
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-2xl bg-muted">
                 {item.imageUrl ? (
                   <Image
                     src={item.imageUrl}
@@ -257,10 +257,10 @@ export function CheckoutForm({ userName, userPhone, governorates }: Props) {
           </div>
         </div>
 
-        <Button type="submit" size="lg" className="w-full" disabled={pending}>
+        <Button type="submit" size="lg" className="w-full rounded-full" disabled={pending}>
           {pending ? "Placing order…" : "Place order · COD"}
         </Button>
-        <Button asChild variant="outline" className="w-full">
+        <Button asChild variant="outline" className="w-full rounded-full">
           <Link href="/cart">Back to cart</Link>
         </Button>
       </aside>

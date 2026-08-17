@@ -61,7 +61,7 @@ export function CartDrawer() {
             <ul className="space-y-4">
               {items.map((item) => (
                 <li key={item.variantId} className="flex gap-3">
-                  <div className="relative size-16 shrink-0 overflow-hidden rounded-md bg-muted">
+                  <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl bg-muted">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}

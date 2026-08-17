@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageTransition } from "@/components/layout/page-transition";
+import { PageIntro } from "@/components/layout/page-intro";
 import { Reveal } from "@/components/motion/reveal";
 import { ProductGrid } from "@/components/products/product-card";
 import { ProductPagination } from "@/components/products/product-filters";
@@ -56,27 +57,23 @@ export default async function CategoryDetailPage({
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <Reveal subtle>
-          <nav className="mb-6 text-sm text-muted-foreground">
-            <Link href="/categories" className="hover:text-primary">
+          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+            <Link href="/categories" className="transition-colors hover:text-primary">
               Categories
             </Link>
-            <span className="mx-2">/</span>
-            <span className="text-foreground">{category.name}</span>
+            <span className="opacity-50">/</span>
+            <span className="font-medium text-foreground">{category.name}</span>
           </nav>
 
-          <div className="mb-8">
-            <h1 className="font-display text-3xl font-semibold tracking-tight">
-              {category.name}
-            </h1>
-            {category.description && (
-              <p className="mt-3 max-w-2xl text-muted-foreground">
-                {category.description}
-              </p>
-            )}
-            <p className="mt-2 text-sm text-muted-foreground">
-              {result.total} products
-            </p>
-          </div>
+          <PageIntro
+            eyebrow="Collection"
+            title={category.name}
+            description={
+              category.description
+                ? `${category.description} · ${result.total} products`
+                : `${result.total} products in this collection.`
+            }
+          />
         </Reveal>
 
         <Reveal delay={80}>

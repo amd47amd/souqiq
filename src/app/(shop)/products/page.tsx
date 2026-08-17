@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/layout/page-transition";
+import { PageIntro } from "@/components/layout/page-intro";
 import { Reveal } from "@/components/motion/reveal";
 import { ProductGrid } from "@/components/products/product-card";
 import {
@@ -55,18 +56,17 @@ export default async function ProductsPage({
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Reveal subtle>
-          <div className="mb-8">
-            <h1 className="font-display text-3xl font-semibold tracking-tight">
-              {trending ? "Trending" : "Products"}
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              {q
+          <PageIntro
+            eyebrow={trending ? "This week" : "Catalog"}
+            title={trending ? "Trending" : "Products"}
+            description={
+              q
                 ? `Results for “${q}”`
                 : trending
                   ? "What shoppers across Iraq are choosing right now."
-                  : "Browse the full SouqIQ catalog across Iraq."}
-            </p>
-          </div>
+                  : "Browse the full SouqIQ catalog across Iraq."
+            }
+          />
         </Reveal>
 
         <div className="grid gap-8 lg:grid-cols-[220px_1fr] xl:grid-cols-[240px_1fr]">

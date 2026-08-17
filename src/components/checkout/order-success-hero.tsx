@@ -11,7 +11,7 @@ export function OrderSuccessHero({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-white p-8 text-center">
+    <div className="rounded-[1.5rem] border border-border/80 bg-white p-8 text-center shadow-[0_18px_50px_-36px_rgba(18,21,26,0.45)]">
       <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
         <CheckCircle2 className="size-7" />
       </div>

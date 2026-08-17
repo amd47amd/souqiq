@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getActiveGovernorates } from "@/lib/orders";
 import { PageTransition } from "@/components/layout/page-transition";
+import { PageIntro } from "@/components/layout/page-intro";
 import { CheckoutForm } from "@/components/checkout/checkout-form";
 
 export const metadata: Metadata = {
@@ -20,14 +21,11 @@ export default async function CheckoutPage() {
   return (
     <PageTransition>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="font-display text-3xl font-semibold tracking-tight">
-            Checkout
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Cash on delivery across all Iraqi governorates.
-          </p>
-        </div>
+        <PageIntro
+          eyebrow="Cash on delivery"
+          title="Checkout"
+          description="Confirm your details — pay when the package arrives."
+        />
 
         <CheckoutForm
           userName={session.user.name}
