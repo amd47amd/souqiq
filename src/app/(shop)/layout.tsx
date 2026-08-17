@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { auth } from "@/lib/auth";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
@@ -10,16 +9,14 @@ const CartDrawer = dynamic(() =>
   })),
 );
 
-export default async function ShopLayout({
+export default function ShopLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
   return (
     <>
-      <Navbar user={session?.user ?? null} />
+      <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
       <CartDrawer />

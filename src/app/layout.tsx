@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { APP_NAME } from "@/lib/constants";
+import { AuthSessionProvider } from "@/components/providers/session-provider";
+import { NavigationProgress } from "@/components/layout/navigation-progress";
 
 const sans = Manrope({
   variable: "--font-manrope",
@@ -31,7 +33,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
       className={`${sans.variable} ${display.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <AuthSessionProvider>
+          <NavigationProgress />
+          {children}
+        </AuthSessionProvider>
+      </body>
     </html>
   );
 }

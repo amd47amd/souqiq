@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { ProductGrid } from "@/components/products/product-card";
 import { ProductPagination } from "@/components/products/product-filters";
 import {
+  getCategories,
   getCategoryBySlug,
   getProducts,
   type ProductSort,
@@ -17,6 +18,13 @@ type Props = {
 };
 
 const SORTS: ProductSort[] = ["newest", "price-asc", "price-desc", "name"];
+
+export const revalidate = 120;
+
+export async function generateStaticParams() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ slug: category.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

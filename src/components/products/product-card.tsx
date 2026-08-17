@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SearchX } from "lucide-react";
 import { cn, formatIQD } from "@/lib/utils";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PendingLinkOverlay } from "@/components/layout/pending-link-overlay";
 import {
   getDisplayPrice,
   type ProductCardData,
@@ -25,7 +26,9 @@ export function ProductCard({
     <Link
       href={`/products/${product.slug}`}
       className="product-card group relative block aspect-[4/5] overflow-hidden rounded-[1.25rem] outline-none focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2"
+      prefetch
     >
+      <PendingLinkOverlay />
       <div className="absolute inset-0 bg-[#dfe3ea]">
         {primary ? (
           <Image

@@ -16,6 +16,8 @@ import {
   getTrendingProducts,
 } from "@/lib/products";
 
+export const revalidate = 120;
+
 export default async function HomePage() {
   const [categories, featured, trending] = await Promise.all([
     getCategories(),

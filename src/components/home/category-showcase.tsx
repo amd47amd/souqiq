@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PendingLinkOverlay } from "@/components/layout/pending-link-overlay";
 
 export type CategoryTile = {
   id: string;
@@ -24,6 +25,7 @@ export function CategoryShowcase({
           <Link
             key={category.id}
             href={`/categories/${category.slug}`}
+            prefetch
             className={cn(
               "group relative isolate overflow-hidden rounded-2xl bg-[#1a2744]",
               featured
@@ -31,6 +33,7 @@ export function CategoryShowcase({
                 : "min-h-[200px] sm:min-h-[220px]",
             )}
           >
+            <PendingLinkOverlay />
             {category.imageUrl ? (
               <Image
                 src={category.imageUrl}

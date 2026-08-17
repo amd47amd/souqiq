@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: "Categories",
 };
 
+export const revalidate = 120;
+
 export default async function CategoriesPage() {
   const categories = await getCategories();
 

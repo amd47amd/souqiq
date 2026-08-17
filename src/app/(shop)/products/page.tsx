@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   title: "Products",
 };
 
+export const revalidate = 120;
+
 export default async function ProductsPage({
   searchParams,
 }: {

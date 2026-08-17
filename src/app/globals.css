@@ -113,6 +113,19 @@
     transform: translate3d(0, 0, 0);
   }
 
+  .nav-progress-bar {
+    animation: nav-progress 1.05s ease-in-out infinite;
+  }
+
+  @keyframes nav-progress {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(350%);
+    }
+  }
+
   .hero-enter {
     animation: hero-enter 0.35s ease-out both;
   }
@@ -142,7 +155,8 @@
     }
 
     .hero-enter,
-    .hero-enter-delay {
+    .hero-enter-delay,
+    .nav-progress-bar {
       animation: none !important;
     }
   }

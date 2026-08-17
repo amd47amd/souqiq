@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { LogOut, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { APP_NAME, NAV_LINKS } from "@/lib/constants";
@@ -11,14 +12,17 @@ import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/store/cart";
 import { logoutAction } from "@/actions/auth";
 
-export type NavbarUser = {
-  name: string;
-  phone: string;
-  role: string;
-} | null;
-
-export function Navbar({ user }: { user: NavbarUser }) {
+export function Navbar() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const user =
+    status === "authenticated" && session?.user
+      ? {
+          name: session.user.name ?? "",
+          phone: session.user.phone,
+          role: session.user.role,
+        }
+      : null;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const openCart = useCartStore((s) => s.openCart);
@@ -102,7 +106,9 @@ export function Navbar({ user }: { user: NavbarUser }) {
             />
           </form>
 
-          {user ? (
+          {status === "loading" ? (
+            <span className="hidden size-9 sm:block" aria-hidden />
+          ) : user ? (
             <div className="hidden items-center gap-1 sm:flex">
               {user.role === "ADMIN" && (
                 <Button variant="ghost" size="sm" asChild>

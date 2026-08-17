@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
@@ -70,7 +71,7 @@ export const getCategories = unstable_cache(
   { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["categories"] },
 );
 
-export async function getCategoryBySlug(slug: string) {
+export const getCategoryBySlug = cache(async (slug: string) => {
   return unstable_cache(
     async () =>
       prisma.category.findFirst({
@@ -79,7 +80,7 @@ export async function getCategoryBySlug(slug: string) {
     ["shop-category", slug],
     { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["categories"] },
   )();
-}
+});
 
 async function fetchProducts(params: ProductListParams) {
   const page = Math.max(1, params.page ?? 1);
@@ -168,7 +169,7 @@ export async function getTrendingProducts(limit = 8) {
   )();
 }
 
-export async function getProductBySlug(slug: string) {
+export const getProductBySlug = cache(async (slug: string) => {
   return unstable_cache(
     async () =>
       prisma.product.findFirst({
@@ -198,6 +199,18 @@ export async function getProductBySlug(slug: string) {
         },
       }),
     ["shop-product", slug],
+    { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["products"] },
+  )();
+});
+
+export async function getAllProductSlugs() {
+  return unstable_cache(
+    async () =>
+      prisma.product.findMany({
+        where: { isActive: true },
+        select: { slug: true },
+      }),
+    ["shop-product-slugs"],
     { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["products"] },
   )();
 }
