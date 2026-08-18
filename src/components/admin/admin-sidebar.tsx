@@ -14,9 +14,9 @@ import {
   Users,
 } from "lucide-react";
 import { logoutAction } from "@/actions/auth";
-import { Button } from "@/components/ui/button";
 import { AdminNavLink } from "@/components/admin/admin-nav-link";
 import { AdminUnseenBadge } from "@/components/admin/admin-unseen-badge";
+import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
@@ -26,6 +26,13 @@ const LINKS = [
   { href: "/admin/users", label: "Customers", icon: Users },
   { href: "/admin/shipping", label: "Shipping", icon: MapPin },
 ] as const;
+
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "A";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
 
 export function AdminSidebar({ adminName }: { adminName: string }) {
   const pathname = usePathname();
@@ -47,22 +54,33 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
   }, [pathname, router]);
 
   return (
-    <aside className="flex w-full flex-col border-b border-border/80 bg-white lg:sticky lg:top-0 lg:h-screen lg:w-60 lg:border-r lg:border-b-0">
-      <div className="flex items-center justify-between px-5 py-5">
-        <div>
-          <Link href="/admin" className="font-display text-lg font-bold tracking-tight text-foreground">
-            SouqIQ
-          </Link>
-          <p className="mt-0.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-            Console
-          </p>
-        </div>
-        <Button asChild variant="outline" size="sm" className="lg:hidden">
-          <Link href="/">Store</Link>
-        </Button>
+    <aside className="flex w-full flex-col border-b border-border/80 bg-white lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:border-r lg:border-b-0">
+      <div className="flex items-center justify-between gap-3 px-4 py-4 lg:px-5 lg:py-5">
+        <Link
+          href="/admin"
+          className="flex min-w-0 items-center gap-3 outline-none [-webkit-tap-highlight-color:transparent]"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary font-display text-sm font-bold text-white">
+            S
+          </span>
+          <span className="min-w-0">
+            <span className="block font-display text-[15px] font-bold tracking-tight text-foreground">
+              SouqIQ
+            </span>
+            <span className="block text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+              Console
+            </span>
+          </span>
+        </Link>
+        <Link
+          href="/"
+          className="rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground outline-none hover:bg-muted hover:text-foreground lg:hidden [-webkit-tap-highlight-color:transparent]"
+        >
+          Store
+        </Link>
       </div>
 
-      <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible lg:px-3 lg:pb-4">
+      <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:px-3 lg:pb-4">
         {LINKS.map((link) => {
           const active =
             link.href === "/admin"
@@ -71,8 +89,15 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
           const Icon = link.icon;
           return (
             <AdminNavLink key={link.href} href={link.href} active={active}>
-              <Icon className="size-4 shrink-0 opacity-80" />
-              {link.label}
+              <span
+                className={cn(
+                  "flex size-8 shrink-0 items-center justify-center rounded-lg",
+                  active ? "bg-white text-primary shadow-sm" : "text-current",
+                )}
+              >
+                <Icon className="size-4" />
+              </span>
+              <span className="min-w-0 flex-1">{link.label}</span>
               {link.href === "/admin/orders" ? <AdminUnseenBadge /> : null}
             </AdminNavLink>
           );
@@ -80,19 +105,31 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
       </nav>
 
       <div className="hidden border-t border-border/80 p-4 lg:block">
-        <p className="truncate text-sm font-medium">{adminName}</p>
-        <p className="text-xs text-muted-foreground">Administrator</p>
-        <div className="mt-3 flex gap-2">
-          <Button asChild variant="outline" size="sm" className="flex-1">
-            <Link href="/">
-              <Store className="size-3.5" />
-              Store
-            </Link>
-          </Button>
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#eef3ff] text-xs font-semibold text-primary">
+            {initials(adminName)}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium">{adminName}</p>
+            <p className="text-xs text-muted-foreground">Administrator</p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Link
+            href="/"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-border bg-white text-xs font-medium text-foreground outline-none hover:bg-muted [-webkit-tap-highlight-color:transparent]"
+          >
+            <Store className="size-3.5" />
+            Store
+          </Link>
           <form action={logoutAction}>
-            <Button type="submit" variant="ghost" size="icon" aria-label="Sign out">
-              <LogOut className="size-4" />
-            </Button>
+            <button
+              type="submit"
+              className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-xl text-xs font-medium text-muted-foreground outline-none hover:bg-muted hover:text-foreground [-webkit-tap-highlight-color:transparent]"
+            >
+              <LogOut className="size-3.5" />
+              Sign out
+            </button>
           </form>
         </div>
       </div>
