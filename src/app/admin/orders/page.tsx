@@ -28,7 +28,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     <div className="space-y-6">
       <AdminPageHeader
         title="Orders"
-        description="Cash-on-delivery orders across Iraq."
+        description="Pack, call, and collect cash on delivery."
       />
       <AdminOrdersTable orders={orders} initialStatus={initialStatus} />
     </div>

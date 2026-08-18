@@ -16,6 +16,11 @@ export type AdminOrderListItem = {
   customerName: string;
   customerPhone: string;
   governorateName: string;
+  addressLine: string;
+  notes: string | null;
+  itemCount: number;
+  itemPreview: string;
+  itemImageUrl: string | null;
 };
 
 export const getAdminProductList = unstable_cache(
@@ -74,21 +79,55 @@ export const getAdminOrderList = unstable_cache(
         createdAt: true,
         customerName: true,
         customerPhone: true,
+        addressLine: true,
+        notes: true,
         governorate: { select: { name: true } },
+        _count: { select: { items: true } },
+        items: {
+          take: 1,
+          select: {
+            productName: true,
+            quantity: true,
+            product: {
+              select: {
+                images: {
+                  orderBy: { sortOrder: "asc" },
+                  take: 1,
+                  select: { url: true },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
-    return orders.map((order) => ({
-      id: order.id,
-      orderNumber: order.orderNumber,
-      total: order.total,
-      status: order.status,
-      isSeenByAdmin: order.isSeenByAdmin,
-      createdAt: order.createdAt.toISOString(),
-      customerName: order.customerName,
-      customerPhone: order.customerPhone,
-      governorateName: order.governorate.name,
-    }));
+    return orders.map((order) => {
+      const first = order.items[0];
+      const extra = order._count.items - 1;
+      const preview = first
+        ? extra > 0
+          ? `${first.productName} +${extra} more`
+          : first.productName
+        : "No items";
+
+      return {
+        id: order.id,
+        orderNumber: order.orderNumber,
+        total: order.total,
+        status: order.status,
+        isSeenByAdmin: order.isSeenByAdmin,
+        createdAt: order.createdAt.toISOString(),
+        customerName: order.customerName,
+        customerPhone: order.customerPhone,
+        governorateName: order.governorate.name,
+        addressLine: order.addressLine,
+        notes: order.notes,
+        itemCount: order._count.items,
+        itemPreview: preview,
+        itemImageUrl: first?.product.images[0]?.url ?? null,
+      };
+    });
   },
   ["admin-order-list"],
   { revalidate: 12, tags: [ADMIN_CACHE_TAGS.orders] },
@@ -174,7 +213,19 @@ export const getAdminOrderById = cache(async (id: string) =>
     include: {
       user: { select: { name: true, phone: true } },
       governorate: true,
-      items: true,
+      items: {
+        include: {
+          product: {
+            select: {
+              images: {
+                orderBy: { sortOrder: "asc" },
+                take: 1,
+                select: { url: true },
+              },
+            },
+          },
+        },
+      },
     },
   }),
 );
