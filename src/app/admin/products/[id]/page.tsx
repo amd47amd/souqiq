@@ -44,7 +44,7 @@ export default async function EditProductPage({ params }: Props) {
   if (!product) notFound();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-6">
       <AdminPageHeader title="Edit product" description={product.name} />
       <ProductForm
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}

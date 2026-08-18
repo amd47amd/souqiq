@@ -27,13 +27,15 @@ export const getAdminProductList = unstable_cache(
   async () => {
     const products = await prisma.product.findMany({
       orderBy: { updatedAt: "desc" },
-      take: 80,
+      take: 150,
       select: {
         id: true,
         name: true,
         basePrice: true,
         hasVariants: true,
         isActive: true,
+        isFeatured: true,
+        isTrending: true,
         category: { select: { name: true } },
         images: {
           orderBy: { sortOrder: "asc" },
@@ -53,6 +55,8 @@ export const getAdminProductList = unstable_cache(
       basePrice: product.basePrice,
       hasVariants: product.hasVariants,
       isActive: product.isActive,
+      isFeatured: product.isFeatured,
+      isTrending: product.isTrending,
       categoryName: product.category.name,
       imageUrl: product.images[0]?.url ?? null,
       stock: product.variants.reduce((sum, variant) => sum + variant.stock, 0),

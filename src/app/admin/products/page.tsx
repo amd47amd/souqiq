@@ -18,7 +18,7 @@ export default async function AdminProductsPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Products"
-        description={`${products.length} items in the catalog`}
+        description="What customers see in the SouqIQ catalog."
         action={
           <Button asChild>
             <Link href="/admin/products/new">Add product</Link>

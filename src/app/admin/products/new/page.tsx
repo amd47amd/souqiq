@@ -8,10 +8,10 @@ export default async function NewProductPage() {
   const categories = await getAdminCategoryOptions();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-6">
       <AdminPageHeader
         title="Add product"
-        description="Creates a simple product with one SKU. Variants can be added later."
+        description="Photo, price, and stock for a new catalog item."
       />
       <ProductForm
         categories={categories
