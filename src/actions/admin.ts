@@ -4,6 +4,11 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { ADMIN_CACHE_TAGS } from "@/lib/admin-cache";
+import {
+  parseImageUrls,
+  parseProductSpecs,
+  parseStringList,
+} from "@/lib/product-details";
 import type { OrderStatus, Role } from "@/types";
 import { ORDER_STATUSES } from "@/types";
 
@@ -171,7 +176,14 @@ export async function upsertProductAction(formData: FormData) {
     ? Number(compareAtPriceRaw)
     : null;
   const stock = Number(formData.get("stock") ?? 0);
-  const imageUrl = String(formData.get("imageUrl") ?? "").trim();
+  const shortDescription =
+    String(formData.get("shortDescription") ?? "").trim() || null;
+  const highlights = parseJsonField(
+    formData.get("highlights"),
+    parseStringList,
+  );
+  const specs = parseJsonField(formData.get("specs"), parseProductSpecs);
+  const imageUrls = parseJsonField(formData.get("imageUrls"), parseImageUrls);
   const isFeatured = formData.get("isFeatured") === "on";
   const isTrending = formData.get("isTrending") === "on";
   const isActive = formData.get("isActive") === "on";
@@ -180,22 +192,39 @@ export async function upsertProductAction(formData: FormData) {
     return { ok: false as const, message: "Please fill required fields." };
   }
 
+  const priceData = {
+    name,
+    slug,
+    description,
+    shortDescription,
+    highlights,
+    specs,
+    categoryId,
+    basePrice: Math.round(basePrice),
+    compareAtPrice:
+      compareAtPrice && compareAtPrice > 0
+        ? Math.round(compareAtPrice)
+        : null,
+    isFeatured,
+    isTrending,
+    isActive,
+  };
+
+  const imageCreates = imageUrls.map((url, sortOrder) => ({
+    url,
+    alt: name,
+    sortOrder,
+  }));
+
   if (id) {
     const product = await prisma.product.update({
       where: { id },
       data: {
-        name,
-        slug,
-        description,
-        categoryId,
-        basePrice: Math.round(basePrice),
-        compareAtPrice:
-          compareAtPrice && compareAtPrice > 0
-            ? Math.round(compareAtPrice)
-            : null,
-        isFeatured,
-        isTrending,
-        isActive,
+        ...priceData,
+        images: {
+          deleteMany: {},
+          create: imageCreates,
+        },
       },
       include: { variants: { where: { isDefault: true }, take: 1 } },
     });
@@ -214,43 +243,13 @@ export async function upsertProductAction(formData: FormData) {
         },
       });
     }
-
-    if (imageUrl) {
-      const existingImage = await prisma.productImage.findFirst({
-        where: { productId: id },
-        orderBy: { sortOrder: "asc" },
-      });
-      if (existingImage) {
-        await prisma.productImage.update({
-          where: { id: existingImage.id },
-          data: { url: imageUrl, alt: name },
-        });
-      } else {
-        await prisma.productImage.create({
-          data: { productId: id, url: imageUrl, alt: name, sortOrder: 0 },
-        });
-      }
-    }
   } else {
     const skuBase = slug.replace(/[^a-z0-9]+/gi, "-").toUpperCase();
     await prisma.product.create({
       data: {
-        name,
-        slug,
-        description,
-        categoryId,
-        basePrice: Math.round(basePrice),
-        compareAtPrice:
-          compareAtPrice && compareAtPrice > 0
-            ? Math.round(compareAtPrice)
-            : null,
-        isFeatured,
-        isTrending,
-        isActive,
+        ...priceData,
         hasVariants: false,
-        images: imageUrl
-          ? { create: [{ url: imageUrl, alt: name, sortOrder: 0 }] }
-          : undefined,
+        images: imageCreates.length ? { create: imageCreates } : undefined,
         variants: {
           create: {
             sku: `${skuBase}-DEFAULT-${Date.now().toString().slice(-4)}`,
@@ -270,10 +269,23 @@ export async function upsertProductAction(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath(`/products/${slug}`);
   revalidatePath("/");
   revalidateTag("products", "max");
   revalidateTag("categories", "max");
   revalidateTag(ADMIN_CACHE_TAGS.products, "max");
   revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
   return { ok: true as const };
+}
+
+function parseJsonField<T>(
+  raw: FormDataEntryValue | null,
+  parse: (value: unknown) => T,
+): T {
+  if (typeof raw !== "string" || !raw.trim()) return parse([]);
+  try {
+    return parse(JSON.parse(raw));
+  } catch {
+    return parse([]);
+  }
 }

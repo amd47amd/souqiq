@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getAdminCategoryOptions } from "@/lib/admin-data";
 import { ProductForm } from "@/components/admin/product-form";
 import { AdminPageHeader } from "@/components/admin/admin-ui";
+import { parseProductSpecs } from "@/lib/product-details";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -19,6 +20,9 @@ export default async function EditProductPage({ params }: Props) {
         name: true,
         slug: true,
         description: true,
+        shortDescription: true,
+        highlights: true,
+        specs: true,
         categoryId: true,
         basePrice: true,
         compareAtPrice: true,
@@ -28,7 +32,6 @@ export default async function EditProductPage({ params }: Props) {
         hasVariants: true,
         images: {
           orderBy: { sortOrder: "asc" },
-          take: 1,
           select: { url: true },
         },
         variants: {
@@ -53,11 +56,14 @@ export default async function EditProductPage({ params }: Props) {
           name: product.name,
           slug: product.slug,
           description: product.description,
+          shortDescription: product.shortDescription ?? "",
+          highlights: product.highlights,
+          specs: parseProductSpecs(product.specs),
           categoryId: product.categoryId,
           basePrice: product.basePrice,
           compareAtPrice: product.compareAtPrice,
           stock: product.variants[0]?.stock ?? 0,
-          imageUrl: product.images[0]?.url ?? "",
+          images: product.images.map((image) => image.url),
           isFeatured: product.isFeatured,
           isTrending: product.isTrending,
           isActive: product.isActive,

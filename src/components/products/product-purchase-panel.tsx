@@ -115,6 +115,11 @@ export function ProductPurchasePanel({ product }: Props) {
       <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
         {product.name}
       </h1>
+      {product.shortDescription ? (
+        <p className="mt-2 text-base text-muted-foreground">
+          {product.shortDescription}
+        </p>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap items-end gap-x-3 gap-y-1">
         <span className="text-3xl font-semibold tracking-tight text-primary">
@@ -135,6 +140,31 @@ export function ProductPurchasePanel({ product }: Props) {
       <p className="mt-5 text-[15px] leading-relaxed text-muted-foreground">
         {product.description}
       </p>
+
+      {product.highlights.length > 0 ? (
+        <ul className="mt-5 space-y-2">
+          {product.highlights.map((item, index) => (
+            <li key={`${index}-${item}`} className="flex items-start gap-2 text-sm text-foreground">
+              <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {product.specs.length > 0 ? (
+        <dl className="mt-6 divide-y divide-border/80 overflow-hidden rounded-2xl border border-border/80 bg-[#f8f9fb]">
+          {product.specs.map((row) => (
+            <div
+              key={`${row.label}-${row.value}`}
+              className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] gap-3 px-4 py-2.5 text-sm"
+            >
+              <dt className="text-muted-foreground">{row.label}</dt>
+              <dd className="font-medium">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
 
       <div className="mt-8 space-y-6 border-t border-border/80 pt-7">
         {product.hasVariants &&

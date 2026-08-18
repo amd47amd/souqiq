@@ -77,22 +77,28 @@ model Category {
 }
 
 model Product {
-  id             String   @id @default(cuid())
-  name           String
-  slug           String   @unique
-  description    String
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  description      String
+  /// One-line pitch shown under the product name.
+  shortDescription String?
+  /// Shopper-facing bullets (scent, fabric, what’s included, etc.).
+  highlights       String[] @default([])
+  /// Flexible facts: Brand, Volume, Material, Origin, Size…
+  specs            Json     @default("[]")
   /// Display / fallback price in IQD. Variant prices are authoritative at cart time.
-  basePrice      Int
-  compareAtPrice Int?
-  categoryId     String
-  category       Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  isFeatured     Boolean  @default(false)
-  isTrending     Boolean  @default(false)
-  isActive       Boolean  @default(true)
+  basePrice        Int
+  compareAtPrice   Int?
+  categoryId       String
+  category         Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  isFeatured       Boolean  @default(false)
+  isTrending       Boolean  @default(false)
+  isActive         Boolean  @default(true)
   /// When true, storefront shows option selectors (Size, Color, etc.).
-  hasVariants    Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  hasVariants      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   images     ProductImage[]
   options    ProductOption[]
@@ -206,7 +212,7 @@ model Order {
   customerName  String
   customerPhone String
   governorateId String
-  governorate   Governorate   @relation(fields: [governorateId], references: [id], onDelete: Restrict)
+  governorate   Governorate @relation(fields: [governorateId], references: [id], onDelete: Restrict)
   addressLine   String
   notes         String?
 

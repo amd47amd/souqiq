@@ -11,7 +11,7 @@ export default async function NewProductPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Add product"
-        description="Photo, price, and stock for a new catalog item."
+        description="Photos, details, price, and stock for a new catalog item."
       />
       <ProductForm
         categories={categories

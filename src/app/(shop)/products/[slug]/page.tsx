@@ -14,6 +14,7 @@ import {
   getProductBySlug,
   getProducts,
 } from "@/lib/products";
+import { parseProductSpecs } from "@/lib/product-details";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: "Product" };
   return {
     title: product.name,
-    description: product.description.slice(0, 160),
+    description: (product.shortDescription || product.description).slice(0, 160),
   };
 }
 
@@ -71,7 +72,12 @@ export default async function ProductDetailPage({ params }: Props) {
           <ProductGallery images={product.images} productName={product.name} />
         </Reveal>
         <Reveal delay={90} subtle>
-          <ProductPurchasePanel product={product} />
+          <ProductPurchasePanel
+            product={{
+              ...product,
+              specs: parseProductSpecs(product.specs),
+            }}
+          />
         </Reveal>
       </div>
 
@@ -79,11 +85,13 @@ export default async function ProductDetailPage({ params }: Props) {
         <section className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5 lg:mt-16">
         <DetailCard
           icon={<Package className="size-5" />}
-          title="What’s included"
+          title={product.highlights.length ? "Highlights" : "What’s included"}
           text={
-            product.hasVariants
-              ? "Choose your preferred options before checkout. Exact stock is checked when you place the order."
-              : product.description
+            product.highlights.length
+              ? product.highlights.join(" · ")
+              : product.hasVariants
+                ? "Choose your preferred options before checkout. Exact stock is checked when you place the order."
+                : product.description
           }
         />
         <DetailCard

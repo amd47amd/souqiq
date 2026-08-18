@@ -4,6 +4,9 @@ export type PurchaseProduct = {
   id: string;
   name: string;
   description: string;
+  shortDescription: string | null;
+  highlights: string[];
+  specs: { label: string; value: string }[];
   basePrice: number;
   compareAtPrice: number | null;
   hasVariants: boolean;
