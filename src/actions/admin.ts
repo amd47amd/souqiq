@@ -84,6 +84,27 @@ export async function deleteProductAction(formData: FormData) {
   revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
+function isUniqueConstraintError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code: string }).code === "P2002"
+  );
+}
+
+function revalidateCategoryViews(slug?: string) {
+  revalidatePath("/admin/categories");
+  revalidatePath("/categories");
+  revalidatePath("/");
+  if (slug) revalidatePath(`/categories/${slug}`);
+  revalidateTag("categories", "max");
+  revalidateTag("products", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.categories, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
+}
+
 export async function upsertCategoryAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id") ?? "");
@@ -98,27 +119,78 @@ export async function upsertCategoryAction(formData: FormData) {
   const sortOrder = Number(formData.get("sortOrder") ?? 0) || 0;
   const isActive = formData.get("isActive") === "on";
 
-  if (!name || !slug) return;
-
-  if (id) {
-    await prisma.category.update({
-      where: { id },
-      data: { name, slug, description, imageUrl, sortOrder, isActive },
-    });
-  } else {
-    await prisma.category.create({
-      data: { name, slug, description, imageUrl, sortOrder, isActive },
-    });
+  if (!name || !slug) {
+    return { ok: false as const, message: "Name and slug are required." };
   }
 
-  revalidatePath("/admin/categories");
-  revalidatePath("/categories");
-  revalidatePath("/");
-  revalidateTag("categories", "max");
-  revalidateTag("products", "max");
-  revalidateTag(ADMIN_CACHE_TAGS.categories, "max");
-  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
-  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
+  try {
+    if (id) {
+      await prisma.category.update({
+        where: { id },
+        data: { name, slug, description, imageUrl, sortOrder, isActive },
+      });
+    } else {
+      await prisma.category.create({
+        data: { name, slug, description, imageUrl, sortOrder, isActive },
+      });
+    }
+  } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return {
+        ok: false as const,
+        message: "That name or slug is already used.",
+      };
+    }
+    return { ok: false as const, message: "Could not save category." };
+  }
+
+  revalidateCategoryViews(slug);
+  return { ok: true as const };
+}
+
+export async function toggleCategoryActiveAction(formData: FormData) {
+  await requireAdmin();
+  const categoryId = String(formData.get("categoryId") ?? "");
+  const isActive = String(formData.get("isActive") ?? "") === "true";
+  if (!categoryId) return;
+
+  const category = await prisma.category.update({
+    where: { id: categoryId },
+    data: { isActive: !isActive },
+    select: { slug: true },
+  });
+
+  revalidateCategoryViews(category.slug);
+}
+
+export async function moveCategoryAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const direction = String(formData.get("direction") ?? "");
+  if (!id || (direction !== "up" && direction !== "down")) return;
+
+  const categories = await prisma.category.findMany({
+    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    select: { id: true },
+  });
+  const index = categories.findIndex((category) => category.id === id);
+  const swapWith = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || swapWith < 0 || swapWith >= categories.length) return;
+
+  const ordered = [...categories];
+  const [moved] = ordered.splice(index, 1);
+  ordered.splice(swapWith, 0, moved);
+
+  await prisma.$transaction(
+    ordered.map((category, sortOrder) =>
+      prisma.category.update({
+        where: { id: category.id },
+        data: { sortOrder },
+      }),
+    ),
+  );
+
+  revalidateCategoryViews();
 }
 
 export async function updateUserAction(formData: FormData) {

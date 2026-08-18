@@ -158,10 +158,21 @@ export const getAdminUserList = unstable_cache(
   },
 );
 
+export type AdminCategoryRow = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  productCount: number;
+};
+
 export const getAdminCategoryList = unstable_cache(
-  async () =>
-    prisma.category.findMany({
-      orderBy: { sortOrder: "asc" },
+  async (): Promise<AdminCategoryRow[]> => {
+    const categories = await prisma.category.findMany({
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       select: {
         id: true,
         name: true,
@@ -172,10 +183,22 @@ export const getAdminCategoryList = unstable_cache(
         isActive: true,
         _count: { select: { products: true } },
       },
-    }),
+    });
+
+    return categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      description: category.description,
+      imageUrl: category.imageUrl,
+      sortOrder: category.sortOrder,
+      isActive: category.isActive,
+      productCount: category._count.products,
+    }));
+  },
   ["admin-category-list"],
   {
-    revalidate: 60,
+    revalidate: ADMIN_LIST_REVALIDATE_SECONDS,
     tags: [ADMIN_CACHE_TAGS.categories],
   },
 );
