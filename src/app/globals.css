@@ -262,6 +262,11 @@
     transition: transform 1.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .gallery-hover-zoom {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .soft-lift:hover {
       transform: translate3d(0, -2px, 0);
@@ -269,6 +274,10 @@
 
     .group:hover .soft-zoom {
       transform: scale(1.018);
+    }
+
+    .group:hover .gallery-hover-zoom {
+      transform: scale(1.55);
     }
   }
 
@@ -295,7 +304,8 @@
     }
 
     .soft-lift,
-    .soft-zoom {
+    .soft-zoom,
+    .gallery-hover-zoom {
       transition: none !important;
       transform: none !important;
     }
