@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Keep recently opened admin (and shop) pages in the client router
+    // so going back to Products / Orders does not wait on the server again.
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
+  },
   images: {
     loader: "custom",
     loaderFile: "./src/lib/image-loader.ts",

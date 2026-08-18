@@ -33,11 +33,10 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
   useEffect(() => {
     let cancelled = false;
     const warm = async () => {
-      await new Promise((resolve) => window.setTimeout(resolve, 1200));
+      await new Promise((resolve) => window.setTimeout(resolve, 250));
       for (const link of LINKS) {
         if (cancelled || link.href === pathname) continue;
         router.prefetch(link.href);
-        await new Promise((resolve) => window.setTimeout(resolve, 350));
       }
     };
     void warm();

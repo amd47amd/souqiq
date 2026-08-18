@@ -1,11 +1,22 @@
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import type { OrderStatus } from "@/types";
 import {
   ADMIN_CACHE_TAGS,
   ADMIN_LIST_REVALIDATE_SECONDS,
 } from "@/lib/admin-cache";
+
+export type AdminOrderListItem = {
+  id: string;
+  orderNumber: string;
+  total: number;
+  status: "PENDING" | "SHIPPED" | "DELIVERED" | "CANCELED";
+  isSeenByAdmin: boolean;
+  createdAt: string;
+  customerName: string;
+  customerPhone: string;
+  governorateName: string;
+};
 
 export const getAdminProductList = unstable_cache(
   async () => {
@@ -49,42 +60,39 @@ export const getAdminProductList = unstable_cache(
   },
 );
 
-export async function getAdminOrderList(status?: OrderStatus) {
-  return unstable_cache(
-    async () => {
-      const orders = await prisma.order.findMany({
-        where: status ? { status } : undefined,
-        orderBy: { createdAt: "desc" },
-        take: 60,
-        select: {
-          id: true,
-          orderNumber: true,
-          total: true,
-          status: true,
-          isSeenByAdmin: true,
-          createdAt: true,
-          customerName: true,
-          customerPhone: true,
-          governorate: { select: { name: true } },
-        },
-      });
+export const getAdminOrderList = unstable_cache(
+  async (): Promise<AdminOrderListItem[]> => {
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+      select: {
+        id: true,
+        orderNumber: true,
+        total: true,
+        status: true,
+        isSeenByAdmin: true,
+        createdAt: true,
+        customerName: true,
+        customerPhone: true,
+        governorate: { select: { name: true } },
+      },
+    });
 
-      return orders.map((order) => ({
-        id: order.id,
-        orderNumber: order.orderNumber,
-        total: order.total,
-        status: order.status,
-        isSeenByAdmin: order.isSeenByAdmin,
-        createdAt: order.createdAt.toISOString(),
-        customerName: order.customerName,
-        customerPhone: order.customerPhone,
-        governorateName: order.governorate.name,
-      }));
-    },
-    ["admin-order-list", status ?? "all"],
-    { revalidate: 12, tags: [ADMIN_CACHE_TAGS.orders] },
-  )();
-}
+    return orders.map((order) => ({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      total: order.total,
+      status: order.status,
+      isSeenByAdmin: order.isSeenByAdmin,
+      createdAt: order.createdAt.toISOString(),
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      governorateName: order.governorate.name,
+    }));
+  },
+  ["admin-order-list"],
+  { revalidate: 12, tags: [ADMIN_CACHE_TAGS.orders] },
+);
 
 export const getAdminUserList = unstable_cache(
   async () =>
