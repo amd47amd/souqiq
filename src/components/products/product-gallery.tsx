@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import {
@@ -27,6 +28,7 @@ export function ProductGallery({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverOrigin, setHoverOrigin] = useState({ x: 50, y: 50 });
+  const [imageSettled, setImageSettled] = useState(true);
 
   const active = images[activeIndex] ?? images[0];
   const hasMultiple = images.length > 1;
@@ -42,6 +44,10 @@ export function ProductGallery({
 
   const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
+
+  useEffect(() => {
+    setImageSettled(false);
+  }, [active.id]);
 
   if (!images.length) {
     return (
@@ -77,7 +83,11 @@ export function ProductGallery({
                   priority
                   quality={70}
                   sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="gallery-hover-zoom object-cover"
+                  className={cn(
+                    "gallery-hover-zoom object-cover",
+                    imageSettled ? "gallery-image-settled" : "gallery-image-entering",
+                  )}
+                  onLoad={() => setImageSettled(true)}
                   style={{
                     transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
                   }}
