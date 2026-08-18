@@ -52,6 +52,7 @@ export function ProductGallery({
     if (lastActiveRef.current.id !== active.id) {
       setPreviousImage(lastActiveRef.current);
       setImageSettled(false);
+      setHoverOrigin({ x: 50, y: 50 });
       lastActiveRef.current = active;
 
       const raf = window.requestAnimationFrame(() => {
@@ -88,6 +89,7 @@ export function ProductGallery({
               <div
                 className="relative block aspect-[4/5] w-full sm:aspect-[5/6]"
                 onMouseMove={(event) => {
+                  if (!imageSettled || previousImage) return;
                   const rect = event.currentTarget.getBoundingClientRect();
                   const x = ((event.clientX - rect.left) / rect.width) * 100;
                   const y = ((event.clientY - rect.top) / rect.height) * 100;
