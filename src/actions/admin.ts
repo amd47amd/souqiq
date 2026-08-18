@@ -211,23 +211,47 @@ export async function updateUserAction(formData: FormData) {
   revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
+function revalidateShippingViews() {
+  revalidatePath("/admin/shipping");
+  revalidatePath("/checkout");
+  revalidateTag("governorates", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.shipping, "max");
+}
+
 export async function updateGovernorateFeeAction(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id") ?? "");
   const shippingFee = Number(formData.get("shippingFee") ?? 0);
   const isActive = formData.get("isActive") === "on";
 
-  if (!id || Number.isNaN(shippingFee) || shippingFee < 0) return;
+  if (!id) {
+    return { ok: false as const, message: "Missing governorate." };
+  }
+  if (Number.isNaN(shippingFee) || shippingFee < 0) {
+    return { ok: false as const, message: "Enter a valid fee in IQD." };
+  }
 
   await prisma.governorate.update({
     where: { id },
     data: { shippingFee: Math.round(shippingFee), isActive },
   });
 
-  revalidatePath("/admin/shipping");
-  revalidatePath("/checkout");
-  revalidateTag("governorates", "max");
-  revalidateTag(ADMIN_CACHE_TAGS.shipping, "max");
+  revalidateShippingViews();
+  return { ok: true as const };
+}
+
+export async function toggleGovernorateActiveAction(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const isActive = String(formData.get("isActive") ?? "") === "true";
+  if (!id) return;
+
+  await prisma.governorate.update({
+    where: { id },
+    data: { isActive: !isActive },
+  });
+
+  revalidateShippingViews();
 }
 
 export async function upsertProductAction(formData: FormData) {

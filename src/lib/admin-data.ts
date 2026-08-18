@@ -216,20 +216,38 @@ export const getAdminCategoryOptions = unstable_cache(
   },
 );
 
+export type AdminShippingRow = {
+  id: string;
+  name: string;
+  shippingFee: number;
+  isActive: boolean;
+  orderCount: number;
+};
+
 export const getAdminShippingList = unstable_cache(
-  async () =>
-    prisma.governorate.findMany({
-      orderBy: { sortOrder: "asc" },
+  async (): Promise<AdminShippingRow[]> => {
+    const governorates = await prisma.governorate.findMany({
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       select: {
         id: true,
         name: true,
         shippingFee: true,
         isActive: true,
+        _count: { select: { orders: true } },
       },
-    }),
+    });
+
+    return governorates.map((governorate) => ({
+      id: governorate.id,
+      name: governorate.name,
+      shippingFee: governorate.shippingFee,
+      isActive: governorate.isActive,
+      orderCount: governorate._count.orders,
+    }));
+  },
   ["admin-shipping-list"],
   {
-    revalidate: 60,
+    revalidate: ADMIN_LIST_REVALIDATE_SECONDS,
     tags: [ADMIN_CACHE_TAGS.shipping],
   },
 );
