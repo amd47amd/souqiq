@@ -269,12 +269,10 @@
 
   .gallery-image-entering {
     opacity: 0;
-    transform: scale(1.035);
   }
 
   .gallery-image-previous {
     opacity: 1;
-    transform: scale(1);
   }
 
   .gallery-image-settled {

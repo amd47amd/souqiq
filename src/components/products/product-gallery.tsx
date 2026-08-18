@@ -106,9 +106,6 @@ export function ProductGallery({
                     quality={70}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="gallery-image-previous object-cover"
-                    style={{
-                      transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
-                    }}
                   />
                 ) : null}
                 <Image
@@ -120,7 +117,8 @@ export function ProductGallery({
                   quality={70}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className={cn(
-                    "gallery-hover-zoom object-cover",
+                    "object-cover",
+                    imageSettled && !previousImage && "gallery-hover-zoom",
                     imageSettled ? "gallery-image-settled" : "gallery-image-entering",
                   )}
                   style={{
