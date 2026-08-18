@@ -53,6 +53,21 @@ export function ProductGallery({
       setPreviousImage(lastActiveRef.current);
       setImageSettled(false);
       lastActiveRef.current = active;
+
+      const raf = window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          setImageSettled(true);
+        });
+      });
+
+      const timeout = window.setTimeout(() => {
+        setPreviousImage(null);
+      }, 260);
+
+      return () => {
+        window.cancelAnimationFrame(raf);
+        window.clearTimeout(timeout);
+      };
     }
   }, [active.id]);
 
@@ -108,10 +123,6 @@ export function ProductGallery({
                     "gallery-hover-zoom object-cover",
                     imageSettled ? "gallery-image-settled" : "gallery-image-entering",
                   )}
-                  onLoad={() => {
-                    setImageSettled(true);
-                    setPreviousImage(null);
-                  }}
                   style={{
                     transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
                   }}
