@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
+import { ADMIN_CACHE_TAGS } from "@/lib/admin-cache";
 import type { OrderStatus, Role } from "@/types";
 import { ORDER_STATUSES } from "@/types";
 
@@ -23,6 +24,8 @@ export async function updateOrderStatusAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.orders, "max");
 }
 
 export async function markOrderSeenAction(orderId: string) {
@@ -34,6 +37,8 @@ export async function markOrderSeenAction(orderId: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.orders, "max");
 }
 
 export async function toggleProductActiveAction(formData: FormData) {
@@ -51,6 +56,8 @@ export async function toggleProductActiveAction(formData: FormData) {
   revalidatePath("/products");
   revalidatePath("/");
   revalidateTag("products", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
 export async function deleteProductAction(formData: FormData) {
@@ -68,6 +75,8 @@ export async function deleteProductAction(formData: FormData) {
   revalidatePath("/products");
   revalidatePath("/");
   revalidateTag("products", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
 export async function upsertCategoryAction(formData: FormData) {
@@ -102,6 +111,9 @@ export async function upsertCategoryAction(formData: FormData) {
   revalidatePath("/");
   revalidateTag("categories", "max");
   revalidateTag("products", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.categories, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
 export async function updateUserAction(formData: FormData) {
@@ -118,6 +130,8 @@ export async function updateUserAction(formData: FormData) {
   });
 
   revalidatePath("/admin/users");
+  revalidateTag(ADMIN_CACHE_TAGS.users, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
 }
 
 export async function updateGovernorateFeeAction(formData: FormData) {
@@ -136,6 +150,7 @@ export async function updateGovernorateFeeAction(formData: FormData) {
   revalidatePath("/admin/shipping");
   revalidatePath("/checkout");
   revalidateTag("governorates", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.shipping, "max");
 }
 
 export async function upsertProductAction(formData: FormData) {
@@ -258,5 +273,7 @@ export async function upsertProductAction(formData: FormData) {
   revalidatePath("/");
   revalidateTag("products", "max");
   revalidateTag("categories", "max");
+  revalidateTag(ADMIN_CACHE_TAGS.products, "max");
+  revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
   return { ok: true as const };
 }

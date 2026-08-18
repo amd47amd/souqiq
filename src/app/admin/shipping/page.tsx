@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminShippingList } from "@/lib/admin-data";
 import { formatIQD } from "@/lib/utils";
 import { updateGovernorateFeeAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,7 @@ export const metadata: Metadata = {
 
 export default async function AdminShippingPage() {
   await requireAdmin();
-  const governorates = await prisma.governorate.findMany({
-    orderBy: { sortOrder: "asc" },
-  });
+  const governorates = await getAdminShippingList();
 
   return (
     <div className="space-y-6">

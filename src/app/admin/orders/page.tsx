@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminOrderList } from "@/lib/admin-data";
 import { formatIQD } from "@/lib/utils";
 import { ORDER_STATUSES } from "@/types";
 import type { OrderStatus } from "@/types";
@@ -22,16 +22,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
       ? (status as OrderStatus)
       : undefined;
 
-  const orders = await prisma.order.findMany({
-    where: statusFilter ? { status: statusFilter } : undefined,
-    orderBy: { createdAt: "desc" },
-    include: {
-      user: { select: { name: true, phone: true } },
-      governorate: { select: { name: true } },
-      _count: { select: { items: true } },
-    },
-    take: 100,
-  });
+  const orders = await getAdminOrderList(statusFilter);
 
   return (
     <div className="space-y-6">
@@ -95,7 +86,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                     </span>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    {order.createdAt.toLocaleString("en-GB")}
+                    {new Date(order.createdAt).toLocaleString("en-GB")}
                   </p>
                 </td>
                 <td className="px-4 py-3">
@@ -105,7 +96,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
                   </p>
                 </td>
                 <td className="hidden px-4 py-3 md:table-cell">
-                  {order.governorate.name}
+                  {order.governorateName}
                 </td>
                 <td className="px-4 py-3 font-medium">
                   {formatIQD(order.total)}

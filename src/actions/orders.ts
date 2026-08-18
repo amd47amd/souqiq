@@ -1,11 +1,13 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { checkoutSchema } from "@/lib/validations/checkout";
 import { generateOrderNumber } from "@/lib/orders";
 import { buildVariantLabel } from "@/lib/product-utils";
 import { sendAdminNewOrderEmail } from "@/lib/email";
+import { ADMIN_CACHE_TAGS } from "@/lib/admin-cache";
 
 export type PlaceOrderState = {
   ok: boolean;
@@ -202,6 +204,9 @@ export async function placeOrderAction(
         unitPrice: item.unitPrice,
       })),
     });
+
+    revalidateTag(ADMIN_CACHE_TAGS.dashboard, "max");
+    revalidateTag(ADMIN_CACHE_TAGS.orders, "max");
 
     return {
       ok: true,

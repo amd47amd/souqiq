@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { getAdminCategoryOptions } from "@/lib/admin-data";
 import { ProductForm } from "@/components/admin/product-form";
 
 type Props = { params: Promise<{ id: string }> };
@@ -12,12 +13,31 @@ export default async function EditProductPage({ params }: Props) {
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
-      include: {
-        images: { orderBy: { sortOrder: "asc" }, take: 1 },
-        variants: { where: { isDefault: true }, take: 1 },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        categoryId: true,
+        basePrice: true,
+        compareAtPrice: true,
+        isFeatured: true,
+        isTrending: true,
+        isActive: true,
+        hasVariants: true,
+        images: {
+          orderBy: { sortOrder: "asc" },
+          take: 1,
+          select: { url: true },
+        },
+        variants: {
+          where: { isDefault: true },
+          take: 1,
+          select: { stock: true },
+        },
       },
     }),
-    prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
+    getAdminCategoryOptions(),
   ]);
 
   if (!product) notFound();

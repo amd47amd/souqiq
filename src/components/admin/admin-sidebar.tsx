@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FolderTree,
   LayoutDashboard,
@@ -27,12 +28,29 @@ const LINKS = [
 
 export function AdminSidebar({ adminName }: { adminName: string }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    let cancelled = false;
+    const warm = async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 1200));
+      for (const link of LINKS) {
+        if (cancelled || link.href === pathname) continue;
+        router.prefetch(link.href);
+        await new Promise((resolve) => window.setTimeout(resolve, 350));
+      }
+    };
+    void warm();
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, router]);
 
   return (
     <aside className="flex w-full flex-col border-b border-border bg-white lg:w-64 lg:border-r lg:border-b-0">
       <div className="flex items-center justify-between px-5 py-5">
         <div>
-          <Link href="/admin" prefetch className="font-display text-xl font-bold text-primary">
+          <Link href="/admin" className="font-display text-xl font-bold text-primary">
             SouqIQ
           </Link>
           <p className="text-xs text-muted-foreground">Admin panel</p>

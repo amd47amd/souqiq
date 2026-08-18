@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminCategoryList } from "@/lib/admin-data";
 import { upsertCategoryAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,7 @@ export const metadata: Metadata = {
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
-  const categories = await prisma.category.findMany({
-    orderBy: { sortOrder: "asc" },
-    include: { _count: { select: { products: true } } },
-  });
+  const categories = await getAdminCategoryList();
 
   return (
     <div className="space-y-8">

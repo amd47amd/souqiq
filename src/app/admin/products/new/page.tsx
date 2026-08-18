@@ -1,13 +1,10 @@
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminCategoryOptions } from "@/lib/admin-data";
 import { ProductForm } from "@/components/admin/product-form";
 
 export default async function NewProductPage() {
   await requireAdmin();
-  const categories = await prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const categories = await getAdminCategoryOptions();
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -21,7 +18,9 @@ export default async function NewProductPage() {
         </p>
       </div>
       <ProductForm
-        categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        categories={categories
+          .filter((category) => category.isActive)
+          .map((category) => ({ id: category.id, name: category.name }))}
       />
     </div>
   );

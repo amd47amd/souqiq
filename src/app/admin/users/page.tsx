@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminUserList } from "@/lib/admin-data";
 import { updateUserAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 
@@ -10,10 +10,7 @@ export const metadata: Metadata = {
 
 export default async function AdminUsersPage() {
   await requireAdmin();
-  const users = await prisma.user.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { _count: { select: { orders: true } } },
-  });
+  const users = await getAdminUserList();
 
   return (
     <div className="space-y-6">

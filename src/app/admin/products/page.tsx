@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { requireAdmin } from "@/lib/admin";
-import { prisma } from "@/lib/prisma";
+import { getAdminProductList } from "@/lib/admin-data";
 import { formatIQD } from "@/lib/utils";
 import {
   deleteProductAction,
@@ -14,21 +13,28 @@ export const metadata: Metadata = {
   title: "Admin Products",
 };
 
+function thumbSrc(src: string) {
+  try {
+    const url = new URL(src);
+    if (
+      url.hostname === "images.unsplash.com" ||
+      url.hostname === "plus.unsplash.com"
+    ) {
+      url.searchParams.set("auto", "format");
+      url.searchParams.set("fit", "crop");
+      url.searchParams.set("w", "96");
+      url.searchParams.set("q", "50");
+      return url.toString();
+    }
+  } catch {
+    // keep original
+  }
+  return src;
+}
+
 export default async function AdminProductsPage() {
   await requireAdmin();
-
-  const products = await prisma.product.findMany({
-    orderBy: { updatedAt: "desc" },
-    include: {
-      category: { select: { name: true } },
-      images: { orderBy: { sortOrder: "asc" }, take: 1 },
-      variants: {
-        where: { isActive: true },
-        select: { stock: true },
-      },
-    },
-    take: 200,
-  });
+  const products = await getAdminProductList();
 
   return (
     <div className="space-y-6">
@@ -63,82 +69,83 @@ export default async function AdminProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => {
-              const stock = product.variants.reduce((s, v) => s + v.stock, 0);
-              return (
-                <tr
-                  key={product.id}
-                  className="border-b border-border last:border-0"
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative size-12 overflow-hidden rounded-md bg-muted">
-                        {product.images[0] && (
-                          <Image
-                            src={product.images[0].url}
-                            alt={product.name}
-                            fill
-                            sizes="48px"
-                            className="object-cover"
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <Link
-                          href={`/admin/products/${product.id}`}
-                          className="font-medium hover:text-primary"
-                        >
-                          {product.name}
-                        </Link>
-                        <p className="text-xs text-muted-foreground">
-                          {product.hasVariants ? "Has variants" : "Simple SKU"}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="hidden px-4 py-3 md:table-cell">
-                    {product.category.name}
-                  </td>
-                  <td className="px-4 py-3">{formatIQD(product.basePrice)}</td>
-                  <td className="hidden px-4 py-3 sm:table-cell">{stock}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        product.isActive
-                          ? "bg-emerald-50 text-emerald-800"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {product.isActive ? "Active" : "Hidden"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Button asChild variant="outline" size="sm">
-                        <Link href={`/admin/products/${product.id}`}>Edit</Link>
-                      </Button>
-                      <form action={toggleProductActiveAction}>
-                        <input type="hidden" name="productId" value={product.id} />
-                        <input
-                          type="hidden"
-                          name="isActive"
-                          value={String(product.isActive)}
+            {products.map((product) => (
+              <tr
+                key={product.id}
+                className="border-b border-border last:border-0"
+              >
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-12 overflow-hidden rounded-md bg-muted">
+                      {product.imageUrl ? (
+                        // Native img avoids /_next/image work for dozens of thumbs.
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={thumbSrc(product.imageUrl)}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="size-12 object-cover"
                         />
-                        <Button type="submit" variant="ghost" size="sm">
-                          {product.isActive ? "Hide" : "Show"}
-                        </Button>
-                      </form>
-                      <form action={deleteProductAction}>
-                        <input type="hidden" name="productId" value={product.id} />
-                        <Button type="submit" variant="ghost" size="sm">
-                          Archive
-                        </Button>
-                      </form>
+                      ) : null}
                     </div>
-                  </td>
-                </tr>
-              );
-            })}
+                    <div>
+                      <Link
+                        href={`/admin/products/${product.id}`}
+                        className="font-medium hover:text-primary"
+                      >
+                        {product.name}
+                      </Link>
+                      <p className="text-xs text-muted-foreground">
+                        {product.hasVariants ? "Has variants" : "Simple SKU"}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td className="hidden px-4 py-3 md:table-cell">
+                  {product.categoryName}
+                </td>
+                <td className="px-4 py-3">{formatIQD(product.basePrice)}</td>
+                <td className="hidden px-4 py-3 sm:table-cell">
+                  {product.stock}
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      product.isActive
+                        ? "bg-emerald-50 text-emerald-800"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {product.isActive ? "Active" : "Hidden"}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/products/${product.id}`}>Edit</Link>
+                    </Button>
+                    <form action={toggleProductActiveAction}>
+                      <input type="hidden" name="productId" value={product.id} />
+                      <input
+                        type="hidden"
+                        name="isActive"
+                        value={String(product.isActive)}
+                      />
+                      <Button type="submit" variant="ghost" size="sm">
+                        {product.isActive ? "Hide" : "Show"}
+                      </Button>
+                    </form>
+                    <form action={deleteProductAction}>
+                      <input type="hidden" name="productId" value={product.id} />
+                      <Button type="submit" variant="ghost" size="sm">
+                        Archive
+                      </Button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

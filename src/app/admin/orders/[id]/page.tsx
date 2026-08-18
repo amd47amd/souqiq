@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { getAdminOrderById } from "@/lib/admin-data";
 import { formatIQD } from "@/lib/utils";
 import { ORDER_STATUSES } from "@/types";
 import { updateOrderStatusAction } from "@/actions/admin";
@@ -14,10 +15,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const order = await prisma.order.findUnique({
-    where: { id },
-    select: { orderNumber: true },
-  });
+  const order = await getAdminOrderById(id);
   return { title: order ? `Order ${order.orderNumber}` : "Order" };
 }
 
@@ -25,14 +23,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   await requireAdmin();
   const { id } = await params;
 
-  const order = await prisma.order.findUnique({
-    where: { id },
-    include: {
-      user: true,
-      governorate: true,
-      items: true,
-    },
-  });
+  const order = await getAdminOrderById(id);
 
   if (!order) notFound();
 

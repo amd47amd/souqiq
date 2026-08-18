@@ -14,12 +14,13 @@ function createPrismaClient() {
     throw new Error("DATABASE_URL is not set");
   }
 
-  // Serverless (Vercel): one DB connection per isolate; Supabase pooler multiplexes.
+  // Serverless (Vercel): keep the pool small; Supabase pooler multiplexes.
+  // max: 1 serialized every admin Promise.all (dashboard felt like 2–4s clicks).
   const pool =
     globalForPrisma.pgPool ??
     new Pool({
       connectionString,
-      max: 1,
+      max: 3,
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 10_000,
     });
