@@ -87,7 +87,7 @@ export function ProductForm({
   return (
     <form
       action={onSubmit}
-      className="space-y-5 rounded-xl border border-border bg-white p-6 shadow-sm"
+      className="space-y-5 rounded-2xl border border-border/80 bg-white p-6 shadow-[0_1px_2px_rgb(16_24_40_/_0.04)]"
     >
       {product?.id && <input type="hidden" name="id" value={product.id} />}
       <input type="hidden" name="imageUrl" value={imageUrl} />

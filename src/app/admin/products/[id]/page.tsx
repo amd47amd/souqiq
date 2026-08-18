@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import { getAdminCategoryOptions } from "@/lib/admin-data";
 import { ProductForm } from "@/components/admin/product-form";
+import { AdminPageHeader } from "@/components/admin/admin-ui";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -44,12 +45,7 @@ export default async function EditProductPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Edit product
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">{product.name}</p>
-      </div>
+      <AdminPageHeader title="Edit product" description={product.name} />
       <ProductForm
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         product={{

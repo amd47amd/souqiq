@@ -5,6 +5,10 @@ import { upsertCategoryAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AdminPageHeader,
+  AdminPanel,
+} from "@/components/admin/admin-ui";
 
 export const metadata: Metadata = {
   title: "Admin Categories",
@@ -15,101 +19,74 @@ export default async function AdminCategoriesPage() {
   const categories = await getAdminCategoryList();
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Categories
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Organize the storefront catalog.
-        </p>
-      </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Categories"
+        description="How products are grouped on the storefront."
+      />
 
-      <form
-        action={upsertCategoryAction}
-        className="grid gap-4 rounded-xl border border-border bg-white p-5 shadow-sm sm:grid-cols-2"
-      >
-        <h2 className="font-display text-lg font-semibold sm:col-span-2">
-          Add category
-        </h2>
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="slug">Slug</Label>
-          <Input id="slug" name="slug" required placeholder="home-appliances" />
-        </div>
-        <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="description">Description</Label>
-          <Input id="description" name="description" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="imageUrl">Image URL</Label>
-          <Input id="imageUrl" name="imageUrl" type="url" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="sortOrder">Sort order</Label>
-          <Input id="sortOrder" name="sortOrder" type="number" defaultValue={0} />
-        </div>
-        <label className="inline-flex items-center gap-2 text-sm sm:col-span-2">
-          <input type="checkbox" name="isActive" defaultChecked />
-          Active
-        </label>
-        <div className="sm:col-span-2">
-          <Button type="submit">Create category</Button>
-        </div>
-      </form>
+      <AdminPanel className="p-5">
+        <form action={upsertCategoryAction} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <h2 className="font-display text-base font-semibold sm:col-span-2 lg:col-span-4">
+            New category
+          </h2>
+          <div className="space-y-1.5">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" name="name" required placeholder="Perfumes" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="slug">Slug</Label>
+            <Input id="slug" name="slug" required placeholder="perfumes" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="sortOrder">Order</Label>
+            <Input id="sortOrder" name="sortOrder" type="number" defaultValue={0} />
+          </div>
+          <div className="flex items-end gap-3">
+            <label className="inline-flex h-10 items-center gap-2 text-sm">
+              <input type="checkbox" name="isActive" defaultChecked />
+              Live
+            </label>
+            <Button type="submit">Add</Button>
+          </div>
+        </form>
+      </AdminPanel>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {categories.map((category) => (
-          <form
-            key={category.id}
-            action={upsertCategoryAction}
-            className="grid gap-3 rounded-xl border border-border bg-white p-5 shadow-sm sm:grid-cols-2"
-          >
-            <input type="hidden" name="id" value={category.id} />
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input name="name" defaultValue={category.name} required />
-            </div>
-            <div className="space-y-2">
-              <Label>Slug</Label>
-              <Input name="slug" defaultValue={category.slug} required />
-            </div>
-            <div className="space-y-2 sm:col-span-2">
-              <Label>Description</Label>
-              <Input
-                name="description"
-                defaultValue={category.description ?? ""}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Image URL</Label>
-              <Input name="imageUrl" defaultValue={category.imageUrl ?? ""} />
-            </div>
-            <div className="space-y-2">
-              <Label>Sort order</Label>
-              <Input
-                name="sortOrder"
-                type="number"
-                defaultValue={category.sortOrder}
-              />
-            </div>
-            <div className="flex items-center justify-between gap-3 sm:col-span-2">
-              <label className="inline-flex items-center gap-2 text-sm">
+          <AdminPanel key={category.id} className="p-4">
+            <form
+              action={upsertCategoryAction}
+              className="grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto_auto_auto]"
+            >
+              <input type="hidden" name="id" value={category.id} />
+              <input type="hidden" name="description" value={category.description ?? ""} />
+              <input type="hidden" name="imageUrl" value={category.imageUrl ?? ""} />
+              <input type="hidden" name="sortOrder" value={category.sortOrder} />
+              <div className="space-y-1.5">
+                <Label>Name</Label>
+                <Input name="name" defaultValue={category.name} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Slug</Label>
+                <Input name="slug" defaultValue={category.slug} required />
+              </div>
+              <p className="pb-2 text-sm text-muted-foreground">
+                {category._count.products} products
+              </p>
+              <label className="inline-flex items-center gap-2 pb-2 text-sm">
                 <input
                   type="checkbox"
                   name="isActive"
                   defaultChecked={category.isActive}
                 />
-                Active · {category._count.products} products
+                Live
               </label>
-              <Button type="submit" variant="outline">
+              <Button type="submit" variant="outline" size="sm" className="mb-0.5">
                 Save
               </Button>
-            </div>
-          </form>
+            </form>
+          </AdminPanel>
         ))}
       </div>
     </div>

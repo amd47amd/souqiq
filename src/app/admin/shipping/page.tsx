@@ -5,6 +5,12 @@ import { formatIQD } from "@/lib/utils";
 import { updateGovernorateFeeAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  AdminPageHeader,
+  AdminPanel,
+  AdminTable,
+  AdminTh,
+} from "@/components/admin/admin-ui";
 
 export const metadata: Metadata = {
   title: "Admin Shipping",
@@ -16,32 +22,31 @@ export default async function AdminShippingPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Shipping fees
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Dummy rates for all Iraqi governorates — update anytime.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Shipping"
+        description="Delivery fee shown at checkout for each governorate."
+      />
 
-      <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border bg-muted/40 text-xs tracking-wide text-muted-foreground uppercase">
+      <AdminPanel>
+        <AdminTable>
+          <thead className="border-b border-border/80 bg-[#f8f9fb]">
             <tr>
-              <th className="px-4 py-3 font-medium">Governorate</th>
-              <th className="px-4 py-3 font-medium">Fee (IQD)</th>
-              <th className="px-4 py-3 font-medium">Active</th>
-              <th className="px-4 py-3 font-medium">Save</th>
+              <AdminTh>Governorate</AdminTh>
+              <AdminTh>Fee (IQD)</AdminTh>
+              <AdminTh>Available</AdminTh>
+              <AdminTh> </AdminTh>
             </tr>
           </thead>
           <tbody>
             {governorates.map((g) => (
-              <tr key={g.id} className="border-b border-border last:border-0">
+              <tr
+                key={g.id}
+                className="border-b border-border/70 last:border-0 hover:bg-[#fafbff]"
+              >
                 <td className="px-4 py-3">
                   <p className="font-medium">{g.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Current: {formatIQD(g.shippingFee)}
+                    {formatIQD(g.shippingFee)}
                   </p>
                 </td>
                 <td className="px-4 py-3" colSpan={3}>
@@ -55,7 +60,7 @@ export default async function AdminShippingPage() {
                       type="number"
                       min={0}
                       defaultValue={g.shippingFee}
-                      className="w-36"
+                      className="w-32"
                     />
                     <label className="inline-flex items-center gap-2 text-sm">
                       <input
@@ -63,18 +68,18 @@ export default async function AdminShippingPage() {
                         name="isActive"
                         defaultChecked={g.isActive}
                       />
-                      Active
+                      Available
                     </label>
                     <Button type="submit" size="sm" variant="outline">
-                      Update
+                      Save
                     </Button>
                   </form>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </AdminTable>
+      </AdminPanel>
     </div>
   );
 }

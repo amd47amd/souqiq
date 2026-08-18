@@ -3,9 +3,15 @@ import { requireAdmin } from "@/lib/admin";
 import { getAdminUserList } from "@/lib/admin-data";
 import { updateUserAction } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
+import {
+  AdminPageHeader,
+  AdminPanel,
+  AdminTable,
+  AdminTh,
+} from "@/components/admin/admin-ui";
 
 export const metadata: Metadata = {
-  title: "Admin Users",
+  title: "Admin Customers",
 };
 
 export default async function AdminUsersPage() {
@@ -14,34 +20,33 @@ export default async function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Users
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Manage customer and admin accounts.
-        </p>
-      </div>
+      <AdminPageHeader
+        title="Customers"
+        description="Accounts that can place COD orders."
+      />
 
-      <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border bg-muted/40 text-xs tracking-wide text-muted-foreground uppercase">
+      <AdminPanel>
+        <AdminTable>
+          <thead className="border-b border-border/80 bg-[#f8f9fb]">
             <tr>
-              <th className="px-4 py-3 font-medium">User</th>
-              <th className="px-4 py-3 font-medium">Orders</th>
-              <th className="px-4 py-3 font-medium">Role</th>
-              <th className="px-4 py-3 font-medium">Active</th>
-              <th className="px-4 py-3 font-medium">Save</th>
+              <AdminTh>Customer</AdminTh>
+              <AdminTh>Orders</AdminTh>
+              <AdminTh>Role</AdminTh>
+              <AdminTh>Access</AdminTh>
+              <AdminTh> </AdminTh>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b border-border last:border-0">
+              <tr
+                key={user.id}
+                className="border-b border-border/70 last:border-0 hover:bg-[#fafbff]"
+              >
                 <td className="px-4 py-3">
                   <p className="font-medium">{user.name}</p>
                   <p className="text-xs text-muted-foreground">{user.phone}</p>
                 </td>
-                <td className="px-4 py-3">{user._count.orders}</td>
+                <td className="px-4 py-3 tabular-nums">{user._count.orders}</td>
                 <td className="px-4 py-3" colSpan={3}>
                   <form
                     action={updateUserAction}
@@ -51,10 +56,10 @@ export default async function AdminUsersPage() {
                     <select
                       name="role"
                       defaultValue={user.role}
-                      className="h-9 rounded-md border border-input bg-white px-2 text-sm"
+                      className="h-9 rounded-lg border border-input bg-white px-2 text-sm"
                     >
-                      <option value="USER">USER</option>
-                      <option value="ADMIN">ADMIN</option>
+                      <option value="USER">Customer</option>
+                      <option value="ADMIN">Admin</option>
                     </select>
                     <label className="inline-flex items-center gap-2 text-sm">
                       <input
@@ -65,15 +70,15 @@ export default async function AdminUsersPage() {
                       Active
                     </label>
                     <Button type="submit" size="sm" variant="outline">
-                      Update
+                      Save
                     </Button>
                   </form>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </AdminTable>
+      </AdminPanel>
     </div>
   );
 }

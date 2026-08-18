@@ -30,12 +30,15 @@ export function AdminNavLink({
       href={href}
       prefetch
       className={cn(
-        "relative inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors",
+        "relative inline-flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors",
         active
-          ? "bg-primary/10 text-primary"
-          : "text-foreground/75 hover:bg-muted hover:text-foreground",
+          ? "bg-[#eef3ff] text-primary"
+          : "text-foreground/70 hover:bg-muted hover:text-foreground",
       )}
     >
+      {active ? (
+        <span className="absolute top-1.5 bottom-1.5 left-0 w-[3px] rounded-full bg-primary lg:block hidden" />
+      ) : null}
       {children}
       <PendingCue />
     </Link>

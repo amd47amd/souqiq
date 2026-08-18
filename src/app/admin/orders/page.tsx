@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin";
 import { getAdminOrderList } from "@/lib/admin-data";
 import { AdminOrdersTable } from "@/components/admin/admin-orders-table";
+import { AdminPageHeader } from "@/components/admin/admin-ui";
 import { ORDER_STATUSES } from "@/types";
 import type { OrderStatus } from "@/types";
 
@@ -25,15 +26,10 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Orders
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Manage COD orders and delivery status.
-        </p>
-      </div>
-
+      <AdminPageHeader
+        title="Orders"
+        description="Cash-on-delivery orders across Iraq."
+      />
       <AdminOrdersTable orders={orders} initialStatus={initialStatus} />
     </div>
   );
