@@ -272,6 +272,11 @@
     transform: scale(1.035);
   }
 
+  .gallery-image-previous {
+    opacity: 1;
+    transform: scale(1);
+  }
+
   .gallery-image-settled {
     opacity: 1;
     transition:
@@ -318,6 +323,7 @@
     .soft-lift,
     .soft-zoom,
     .gallery-hover-zoom,
+    .gallery-image-previous,
     .gallery-image-settled,
     .gallery-image-entering {
       transition: none !important;

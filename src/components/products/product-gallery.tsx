@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import {
@@ -32,6 +33,8 @@ export function ProductGallery({
 
   const active = images[activeIndex] ?? images[0];
   const hasMultiple = images.length > 1;
+  const lastActiveRef = useRef(active);
+  const [previousImage, setPreviousImage] = useState<GalleryImage | null>(null);
 
   const goTo = useCallback(
     (index: number) => {
@@ -46,7 +49,11 @@ export function ProductGallery({
   const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
 
   useEffect(() => {
-    setImageSettled(false);
+    if (lastActiveRef.current.id !== active.id) {
+      setPreviousImage(lastActiveRef.current);
+      setImageSettled(false);
+      lastActiveRef.current = active;
+    }
   }, [active.id]);
 
   if (!images.length) {
@@ -75,6 +82,20 @@ export function ProductGallery({
                   });
                 }}
               >
+                {previousImage ? (
+                  <Image
+                    src={previousImage.url}
+                    alt={previousImage.alt ?? productName}
+                    fill
+                    priority
+                    quality={70}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="gallery-image-previous object-cover"
+                    style={{
+                      transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
+                    }}
+                  />
+                ) : null}
                 <Image
                   key={active.id}
                   src={active.url}
@@ -87,7 +108,10 @@ export function ProductGallery({
                     "gallery-hover-zoom object-cover",
                     imageSettled ? "gallery-image-settled" : "gallery-image-entering",
                   )}
-                  onLoad={() => setImageSettled(true)}
+                  onLoad={() => {
+                    setImageSettled(true);
+                    setPreviousImage(null);
+                  }}
                   style={{
                     transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
                   }}
