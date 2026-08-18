@@ -30,6 +30,7 @@ export function ProductGallery({
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverOrigin, setHoverOrigin] = useState({ x: 50, y: 50 });
   const [imageSettled, setImageSettled] = useState(true);
+  const [zoomPaused, setZoomPaused] = useState(false);
 
   const active = images[activeIndex] ?? images[0];
   const hasMultiple = images.length > 1;
@@ -89,7 +90,7 @@ export function ProductGallery({
               <div
                 className="relative block aspect-[4/5] w-full sm:aspect-[5/6]"
                 onMouseMove={(event) => {
-                  if (!imageSettled || previousImage) return;
+                  if (!imageSettled || previousImage || zoomPaused) return;
                   const rect = event.currentTarget.getBoundingClientRect();
                   const x = ((event.clientX - rect.left) / rect.width) * 100;
                   const y = ((event.clientY - rect.top) / rect.height) * 100;
@@ -120,7 +121,7 @@ export function ProductGallery({
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className={cn(
                     "object-cover",
-                    imageSettled && !previousImage && "gallery-hover-zoom",
+                    imageSettled && !previousImage && !zoomPaused && "gallery-hover-zoom",
                     imageSettled ? "gallery-image-settled" : "gallery-image-entering",
                   )}
                   style={{
@@ -151,22 +152,26 @@ export function ProductGallery({
                 <>
                   <button
                     type="button"
+                    onMouseEnter={() => setZoomPaused(true)}
+                    onMouseLeave={() => setZoomPaused(false)}
                     onClick={(event) => {
                       event.stopPropagation();
                       goPrev();
                     }}
-                    className="absolute top-1/2 left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground hover:bg-white"
+                    className="absolute top-1/2 left-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-foreground shadow-[0_8px_20px_-12px_rgba(18,21,26,0.45)] transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-1/2 hover:scale-[1.06] hover:bg-white hover:shadow-[0_14px_26px_-14px_rgba(18,21,26,0.5)]"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="size-5" />
                   </button>
                   <button
                     type="button"
+                    onMouseEnter={() => setZoomPaused(true)}
+                    onMouseLeave={() => setZoomPaused(false)}
                     onClick={(event) => {
                       event.stopPropagation();
                       goNext();
                     }}
-                    className="absolute top-1/2 right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground hover:bg-white"
+                    className="absolute top-1/2 right-3 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-foreground shadow-[0_8px_20px_-12px_rgba(18,21,26,0.45)] transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-1/2 hover:scale-[1.06] hover:bg-white hover:shadow-[0_14px_26px_-14px_rgba(18,21,26,0.5)]"
                     aria-label="Next image"
                   >
                     <ChevronRight className="size-5" />
