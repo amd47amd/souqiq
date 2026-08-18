@@ -46,8 +46,8 @@ function thumbSrc(src: string) {
     ) {
       url.searchParams.set("auto", "format");
       url.searchParams.set("fit", "crop");
-      url.searchParams.set("w", "640");
-      url.searchParams.set("q", "70");
+      url.searchParams.set("w", "160");
+      url.searchParams.set("q", "60");
       return url.toString();
     }
   } catch {
@@ -134,8 +134,8 @@ export function AdminProductsTable({ products }: { products: AdminProductRow[] }
         })}
       </div>
 
-      <AdminPanel className="p-4 sm:p-5">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <AdminPanel>
+        <div className="flex flex-col gap-3 border-b border-border/80 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div>
             <p className="font-display text-base font-semibold">{listTitle}</p>
             <p className="text-sm text-muted-foreground">
@@ -176,99 +176,98 @@ export function AdminProductsTable({ products }: { products: AdminProductRow[] }
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+          <ul>
             {visible.map((product) => (
-              <article
+              <li
                 key={product.id}
-                role="link"
-                tabIndex={0}
-                onClick={() => router.push(`/admin/products/${product.id}`)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    router.push(`/admin/products/${product.id}`);
-                  }
-                }}
-                className="group cursor-pointer overflow-hidden rounded-2xl border border-border/80 bg-white transition-colors hover:border-primary/25"
+                className="border-b border-border/70 last:border-0"
               >
-                <div className="relative aspect-[4/5] bg-[#eef1f6]">
-                  {product.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={thumbSrc(product.imageUrl)}
-                      alt=""
-                      className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  ) : (
-                    <Package className="absolute inset-0 m-auto size-7 text-muted-foreground" />
-                  )}
-                  <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-                    <Pill tone={product.isActive ? "success" : "muted"}>
-                      {product.isActive ? "Live" : "Hidden"}
-                    </Pill>
-                    {product.stock <= 5 ? (
-                      <Pill tone="warning">
-                        {product.stock === 0 ? "Out" : `${product.stock} left`}
-                      </Pill>
-                    ) : null}
+                <article
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => router.push(`/admin/products/${product.id}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      router.push(`/admin/products/${product.id}`);
+                    }
+                  }}
+                  className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-[#fafbff] sm:gap-4 sm:px-5"
+                >
+                  <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-[#eef1f6] ring-1 ring-border/60 sm:size-16">
+                    {product.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumbSrc(product.imageUrl)}
+                        alt=""
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <Package className="absolute inset-0 m-auto size-5 text-muted-foreground" />
+                    )}
                   </div>
-                </div>
-                <div className="space-y-2 p-3">
-                  <div>
-                    <p className="line-clamp-2 font-medium leading-snug">
-                      {product.name}
-                    </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="truncate font-medium">{product.name}</p>
+                      <Pill tone={product.isActive ? "success" : "muted"}>
+                        {product.isActive ? "Live" : "Hidden"}
+                      </Pill>
+                      {product.stock <= 5 ? (
+                        <Pill tone="warning">
+                          {product.stock === 0 ? "Out" : `${product.stock} left`}
+                        </Pill>
+                      ) : null}
+                    </div>
+                    <p className="mt-0.5 text-sm text-muted-foreground">
                       {product.categoryName}
                       {product.hasVariants ? " · Variants" : ""}
+                      {product.isFeatured ? " · Featured" : ""}
+                      {product.isTrending ? " · Trending" : ""}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-display text-sm font-semibold tabular-nums">
+                  <div className="hidden shrink-0 text-right sm:block">
+                    <p className="font-display font-semibold tabular-nums">
                       {formatIQD(product.basePrice)}
                     </p>
-                    <div className="flex">
-                      <form
-                        action={toggleProductActiveAction}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <input type="hidden" name="productId" value={product.id} />
-                        <input
-                          type="hidden"
-                          name="isActive"
-                          value={String(product.isActive)}
-                        />
-                        <button
-                          type="submit"
-                          className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                          aria-label={product.isActive ? "Hide" : "Show"}
-                        >
-                          {product.isActive ? (
-                            <EyeOff className="size-3.5" />
-                          ) : (
-                            <Eye className="size-3.5" />
-                          )}
-                        </button>
-                      </form>
-                      <form
-                        action={deleteProductAction}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <input type="hidden" name="productId" value={product.id} />
-                        <button
-                          type="submit"
-                          className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-destructive"
-                          aria-label="Archive"
-                        >
-                          <Archive className="size-3.5" />
-                        </button>
-                      </form>
-                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Stock {product.stock}
+                    </p>
                   </div>
-                </div>
-              </article>
+                  <div className="flex shrink-0" onClick={(event) => event.stopPropagation()}>
+                    <form action={toggleProductActiveAction}>
+                      <input type="hidden" name="productId" value={product.id} />
+                      <input
+                        type="hidden"
+                        name="isActive"
+                        value={String(product.isActive)}
+                      />
+                      <button
+                        type="submit"
+                        className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+                        aria-label={product.isActive ? "Hide" : "Show"}
+                      >
+                        {product.isActive ? (
+                          <EyeOff className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
+                      </button>
+                    </form>
+                    <form action={deleteProductAction}>
+                      <input type="hidden" name="productId" value={product.id} />
+                      <button
+                        type="submit"
+                        className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-destructive"
+                        aria-label="Archive"
+                      >
+                        <Archive className="size-4" />
+                      </button>
+                    </form>
+                  </div>
+                </article>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </AdminPanel>
     </div>
